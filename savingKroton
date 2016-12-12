@@ -1,0 +1,2929 @@
+package {
+	import flash.display.MovieClip;
+	import flash.events.*;
+	import flash.ui.Keyboard;
+	import flash.media.*;
+	import flash.display.MovieClip;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.BlurFilter;
+	import flash.utils.*;
+	import flash.net.SharedObject;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
+
+	public class MainSavingKroton extends MovieClip { //adding all buttons, integers, arrays, and booleans
+		var btnReeb: Reeb; // Button of reeb
+		var btnNinja: Ninja; // button of ninja
+		var btnRex: Rex1; // button of rex
+		var btnContinue: Continue; //a button to continue to the next frame/slide
+		var reeb: ReebObj; // pSelectArray[0]
+		var rex: RexObj; //pSelectArray[0]
+		var ninja: NinjaObj; //pSelectArray[0]
+		var snakeObj: Snake; //enemy for L1
+		var vultureObj: Vulture; //enemy for L1
+		var cactusObj: Cactus; //enemy for L1
+		var tumbleweedObj: Tumbleweed; //enemy for L1
+		var screenBackgroundObj: ScreenBackground; // background for L1
+		var blackScreenObj: BlackScreen; //for a fade out
+		var randomNumberLevel1: int; //just a random number to control things
+		var level1ScreenBackgroundArray: Array; //an array to store the backgrounds
+		var vx1: int; //velocity of player level 1
+		var level1ObjectArray: Array; //array to hold level 1 obstacles
+		var tumbleweedTrackerArray: Array; //a tracker array to track the indexes of the tumbleweeds
+		var vultureTrackerArray: Array; //a tracker array to track the indexes of the vultures
+		var sideNinjaLeft: NinjaSideViewLeft; //pSelectArray[1]
+		var sideReebLeft: ReebSideViewLeft; //pSelectArray[1]
+		var sideRexLeft: RexSideViewLeft; //pSelectArray[1]
+		var sideNinjaRight: NinjaSideViewRight; //pSelectArray[2]
+		var sideReebRight: ReebSideViewRight; //pSelectArray[2]
+		var sideRexRight: RexSideViewRight; //pSelectArray[2]
+		var ninjaJetpackLeft: NinjaJetpackLeft; ////pSelectArray[3]
+		var ninjaJetpackRight: NinjaJetpackRight; //pSelectArray[4]
+		var reebJetpackLeft: ReebJetpackLeft; //pSelectArray[3]
+		var reebJetpackRight: ReebJetpackRight; //pSelectArray[4]
+		var rexJetpackLeft: RexJetpackLeft; //pSelectArray[3]
+		var rexJetpackRight: RexJetpackRight; //pSelectArray[4]
+		var selectionShadow: SelectionShadow; // a shadow to indicate 
+		var btnStart1: Start1; //start button
+		var btnStart: Start; //start buttom
+		var myLevel: Number; //tracks the current level
+		var selectionShadowAdded: Boolean; //indicated that there is a shadow
+		var jumping: Boolean; //is the player jumping?
+		var pSelectArray: Array; //array to hold the player selections
+		var cName: String;
+		var currentPSelect: int; //0 means Reeb, 1 means Ninja, 2 means Rex
+		var vy1: int; //velocity y level 1
+		var yPlaceHolder: Number; //the previous y
+		var blur: BlurFilter; //blur for the selection shadow
+		var btnRestart: Restart; //restart button
+		var myTimer: Timer; //timer 
+		var crouching: Boolean; //is the player crouching?
+		var playerCar: Car; //player level2
+		var level2ObjectArray: Array; //array to hold enemies for level2
+		var truck: Truck; //enemy for l2
+		var bCar: BlueCar; //enemy for l2
+		var rCar: RedCar; //enemy for l2
+		var gCar: GreenCar; //enemy for l2
+		var cyclist: Cyclist; //enemy for l2
+		var roadBackground: RoadBackground; //backtround for l2
+		var themeSong: Sound; //theme song
+		var themeSongSoundChannel: SoundChannel;
+		var vultureSound: Sound; //vulture sound
+		var vultureSoundSoundChannel: SoundChannel;
+		var deathSound: Sound; //sound that plays when you die
+		var deathSoundSoundChannel: SoundChannel;
+		var carSound: Sound; //car sounds
+		var carSoundSoundChannel: SoundChannel;
+		var vultureSoundPlaying: Boolean; //is the vulture sound already playing?
+		var deathSoundStarted, deathSoundComplete, transitionInitiate, transitionComplete, addThemeSong: Boolean; //booleans to control the game over transition
+		var vultureSoundTracker: int;
+		var transitionInitiateTimer: Timer;
+		var level2RandomNumber1, level2RandomNumber2, level2RandomNumber3, level2RandomNumber4: int;
+		var level2Background: Level2Background; //background for level two 
+		var level2BackgroundArray: Array; //array for the background in level two 
+		var streetDividers: StreetDividers; //street dividers for level two 
+		var streetDividersArrayLeft, streetDividersArrayRight: Array;
+		var vy2, vy2_1: int;
+		var level2Player: LevelTwoPlayer;
+		var randomNumberLevel3: int;
+		var safeBackground: SafeBackground; //background for level four 
+		var boulder: Boulder; //boulder enemy for level three
+		var bat: Bat; //bat enemy for level three 
+		var stormCloud: StormCloud; //stormcloud enemy for level three
+		var devil: Devil;
+		var randomX: int;
+		var level3ObjectArray: Array;
+		var vy3: int;
+		var vy3_1: int;
+		var vy4: int;
+		var vx4: int;
+		var level3BackgroundArray, boulderTrackerArray, movementArray, warningArray: Array;
+		var level3Background: Level3Background; //the background for level three 
+		var street: Street; //the street for level two 
+		var holdKey, trigger, move, youLose: Boolean;
+		var carSoundPlaying, added: Boolean;
+		var dial: Dial; //the dial for level four 
+		var lives, spacebar, turbine1Rotation, turbine2Rotation, turbine3Rotation, turbine4Rotation, turbine5Rotation, level4RandomNumber1, level4RandomNumber2, level4RandomNumber3, level4RandomNumber4, level4RandomNumber5: int;
+		var wrongSound: Sound;
+		var correctSound: Sound;
+		var closeSound: Sound;
+		var wrongSoundSoundChannel: SoundChannel;
+		var correctSoundSoundChannel: SoundChannel;
+		var closeSoundSoundChannel: SoundChannel;
+		var checkmark: Checkmark;
+		var wrongmark: X;
+		var lives1: Lives;
+		var livesArray, markArray: Array;
+		var youWin: Boolean;
+		var warning: Warning;
+		var swordLeft: SwordObjLeft; //the left sword
+		var swordRight: SwordObjRight; //the right sword
+		var vx5, vy5: int;
+		var platform: Platform;
+		var largePlatform: LargePlatform; //the large platform in level five 
+		var eventsRemoved: Boolean;
+		var holdKeyLevel5: Boolean;
+		var feet: Number;
+		var level5Background: Level5Background; //the background for level five 
+		var bossLeft: BossLeft;
+		var fireballLeft: FireballLeft; //the left facing fireball
+		var bossRight: BossRight;
+		var fireballRight: FireballRight; //the right facing fireball
+		var actionsTimer: Timer;
+		var fireballArray: Array;
+		var fireballAmount: Number;
+		var vx5_1, numberRandom, numberRandom1: int;
+		var playerHealth, bossHealth: int;
+		var playerAlive, bossAlive: Boolean; //booleans to track whether or not the player is alive and the boss is alive in level 5 
+		var enemyHealthBar: EnemyHealth; //health bar for the enemy 
+		var playerHealthBar: PlayerHealth; //health bar for the player
+		var leftFireballArray, rightFireballArray: Array; //arrays for the fireballs in level five 
+		var savedHighScore: SharedObject; //saved highscore 
+		var highScore: Number; //high score number
+		var todayDate: Date;
+		var dateStr: String;
+		var previousScore: Object;
+		var scoreTimer: Timer;
+		var nameText: TextField; //text field to enter one's name 
+		var gem: Gem; //the gem to be used at the end 
+		var previousScoreTextField, highScoreTextField: TextField;
+		var endScreenTextFormat, endScreenTextFormat1: TextFormat;
+		var swordSwing: Boolean;
+		var btnSave: Save; //the save button to save the highscore 
+		var btnSkip: Skip; //the skip button to skip if one does not want to save the highscore 
+		var name1: String;
+		var youWinSound: Sound;
+		var youWinSoundChannel: SoundChannel;
+		var youWinStarted: Boolean;
+		var eventsRemoved1: Boolean;
+		var quietSound: SoundTransform;
+		var fullVolume: SoundTransform;
+		public function MainSavingKroton() //contructor function
+		{
+			myLevel = 0; //current level will begin at 0
+
+			todayDate = new Date(); //src: http://help.adobe.com/en_US/as2/reference/flashlite/WS5b3ccc516d4fbf351e63e3d118ccf9c47f-7e13.html
+			dateStr = (todayDate.getDate() + "/" + (todayDate.getMonth() + 1) + "/" + todayDate.getFullYear()); //src: http://help.adobe.com/en_US/as2/reference/flashlite/WS5b3ccc516d4fbf351e63e3d118ccf9c47f-7e13.html
+
+			scoreTimer = new Timer(1000);
+
+			savedHighScore = SharedObject.getLocal("HighScores");
+
+			if (savedHighScore.data.savedScore) {
+				previousScore = new Object();
+				previousScore.score = savedHighScore.data.savedScore;
+				previousScore.name = savedHighScore.data.name;
+				previousScore.date = savedHighScore.data.date;
+			} //end if 
+
+			//adds ints
+			playerHealth = 100;
+			bossHealth = 200;
+			currentPSelect = 3; //the current player selection will start at 0
+			vy1 = 0;
+			vy2 = 13;
+			vy2_1 = 9;
+			vy3 = 10;
+			vy3_1 = 8;
+			vy4 = 0;
+			vx4 = 0;
+
+			//adds all the arrays 
+			pSelectArray = new Array(); //this array is for the character selected
+			level1ObjectArray = new Array(); //array for the objects in level one
+			level2ObjectArray = new Array();
+			tumbleweedTrackerArray = new Array(); //tracks the tumbleweed in level 1 
+			level1ScreenBackgroundArray = new Array();
+			vultureTrackerArray = new Array(); //tracks the vultures in level 1
+			level3ObjectArray = new Array() //holdobject for level 3
+			fireballArray = new Array(); //holds all fireballs
+			leftFireballArray = new Array(); //holds all fireballs going left
+			rightFireballArray = new Array(); //holds all fireballs going right
+			level2BackgroundArray = new Array(); //holds the background for level 2
+			streetDividersArrayLeft = new Array(); //holds the street dividers between lanes 1 ans 2
+			streetDividersArrayRight = new Array(); //holds the street dividers for lanes 2 and 3
+			level3BackgroundArray = new Array(); //holds background for level 3
+			boulderTrackerArray = new Array(); //trakcs the indexes of all boulders in level3ObjectArray
+			movementArray = new Array(); //inidicates whether an enemy will move left or right
+			livesArray = new Array(); //tracks lives left for the safe
+			markArray = new Array(); //holds all checkmarks
+			warningArray = new Array(); //holds the boulder warnings for level 3
+
+			//adds the start button 
+			btnStart = new Start(); //the location of the first start button
+			btnStart.x = 268;
+			btnStart.y = 279;
+			addChild(btnStart);
+
+			//Makes blue for the shadow
+			blur = new BlurFilter();
+			blur.blurX = 7;
+			blur.blurY = 7;
+			blur.quality = BitmapFilterQuality.MEDIUM; //medium blur
+
+			//adding all the booleans 
+			crouching = false;
+			deathSoundStarted = false;
+			deathSoundComplete = false;
+			transitionInitiate = false;
+			carSoundPlaying = false;
+			vultureSoundPlaying = false;
+			youLose = false;
+			added = false;
+			eventsRemoved = false;
+			swordSwing = false;
+			holdKeyLevel5 = false;
+			jumping = false;
+			selectionShadowAdded = false; //this boolean will be counting the shadows at the character selection screen
+			holdKey = false;
+			transitionComplete = false;
+			addThemeSong = false;
+			youWinStarted = false;
+			eventsRemoved1 = false;
+
+			//adds event listeners
+			btnStart.addEventListener(MouseEvent.CLICK, launchPlayerSelect); //adding the start button function
+			stage.addEventListener(Event.ENTER_FRAME, gameLoop); //adding the game loop function
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp); //adding the player jump function
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown); //adding the player crouch function
+
+			//adds all the sounds/sound channels
+			themeSong = new ThemeSong();
+			themeSongSoundChannel = new SoundChannel();
+			themeSongSoundChannel = themeSong.play();
+			themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+
+			vultureSound = new VultureSound();
+			vultureSoundSoundChannel = new SoundChannel();
+
+			deathSound = new DeathSound();
+			deathSoundSoundChannel = new SoundChannel();
+
+			carSound = new CarSound();
+			carSoundSoundChannel = new SoundChannel();
+
+			wrongSound = new WrongClick();
+			wrongSoundSoundChannel = new SoundChannel();
+
+			closeSound = new CloseClick();
+			closeSoundSoundChannel = new SoundChannel();
+
+			correctSound = new CorrectClick();
+			correctSoundSoundChannel = new SoundChannel();
+
+			youWinSound = new YouWin();
+			youWinSoundChannel = new SoundChannel();
+
+			//make sound transforms to control volume
+			quietSound = new SoundTransform();
+			quietSound.volume = .05;
+
+			fullVolume = new SoundTransform();
+			fullVolume.volume = 1;
+
+		} //end constructor 
+		public function gameLoop(e: Event): void {
+			if (myLevel == 1) //all the code in the gameloop for level one 
+			{
+				if (vy1 > -39) //if the player's velocity is greater than -39, subtract 3 from it's momentum until it reaches -39 (the opposite of where it started)
+				{
+					vy1 -= 3; //subtract 3 from the player's momentum 
+				} //end if 
+				if (pSelectArray[2].y <= yPlaceHolder && jumping == true && deathSoundStarted == false) //if the player isn't lower than where it started & the player is jumping 
+				{
+					pSelectArray[2].y -= vy1; //apply velocity 
+					if (vy1 == -39) //once the player reaches the point where it began
+					{
+						jumping = false; //the jumping boolean is now false & it's no longer jumping 
+					} //end if 
+				} //end if 
+				if (level1ObjectArray.length == 0) //if the player wins level one 
+				{
+					stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //remove the arrow key functions
+					stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+					pSelectArray[2].x -= vx1; //This all makes the player run double speed
+					//this will change the player's movement keyframes
+					if (pSelectArray[2] != sideRexRight && pSelectArray[2].currentFrame >= 11) {
+						pSelectArray[2].gotoAndPlay(2);
+					} //end if 
+					else if (pSelectArray[2] == sideRexRight && pSelectArray[2].currentFrame >= 9) {
+						pSelectArray[2].gotoAndPlay(2);
+					} //end else if
+					else {
+						pSelectArray[2].gotoAndPlay(pSelectArray[2].currentFrame + 1);
+					} //end else
+					if (pSelectArray[2].x >= 300) //if the player passes our virtual boundry initate the following transition 
+					{
+						if (blackScreenObj == null) //this all makes the black screen fade in 
+						{
+							scoreTimer.stop();
+							blackScreenObj = new BlackScreen();
+							blackScreenObj.x = 0;
+							blackScreenObj.y = 0;
+							blackScreenObj.scaleX = 3;
+							blackScreenObj.scaleY = 3;
+							blackScreenObj.alpha = 0;
+							addChild(blackScreenObj);
+						} //end if
+						blackScreenObj.alpha += .02;
+						if (blackScreenObj.alpha >= 1) //if it is fully opaque destroy the previous level
+						{
+							myLevel = 1.1;
+							pSelectArray[2].gotoAndStop(1);
+							removeChild(pSelectArray[2]); //removes the player from screen
+							removeChild(blackScreenObj); //removes the black screen
+							for (var dd: int = 0; dd < level1ScreenBackgroundArray.length; dd++) //for loop to take out the moving background
+							{
+								removeChild(level1ScreenBackgroundArray[dd]);
+								level1ScreenBackgroundArray[dd] = null;
+								level1ScreenBackgroundArray.splice(dd, 1)
+								dd--;
+							} //end for 
+							gotoAndStop(7); //goes to the next frame on the stage
+							blackScreenObj = new BlackScreen(); //adds black screen for fading out 
+							blackScreenObj.x = 0;
+							blackScreenObj.y = 0;
+							blackScreenObj.scaleX = 3;
+							blackScreenObj.scaleY = 3;
+							blackScreenObj.alpha = 1;
+							addChild(blackScreenObj);
+							//all if the following adds the character back onto the screen
+							pSelectArray2Placement();
+							addChildAt(pSelectArray[2], 1); //ensures black screen on top
+							pSelectArray[2].gotoAndStop(1); //player goes to standing position
+							btnContinue = new Continue(); //adds continue button
+							btnContinue.x = 461.5; //location of continue button
+							btnContinue.y = 46.8;
+							addChildAt(btnContinue, 2);
+							btnContinue.addEventListener(MouseEvent.CLICK, instructionsContinue2); //adds function to the button
+						} //end if 
+					} //end if 
+				} //end if
+				for (var f: int = 0; f < level1ObjectArray.length; f++) //cycles through level one object array to make it move
+				{
+					if (pSelectArray[2].currentFrame != 14) {
+						level1ObjectArray[f].x += vx1;
+					} //end if
+					for (var b: int = 0; b < tumbleweedTrackerArray.length; b++) {
+						if (f == tumbleweedTrackerArray[b] && level1ObjectArray[tumbleweedTrackerArray[b]].x <= 575) {
+							level1ObjectArray[tumbleweedTrackerArray[b]].x += vx1 / 4
+						} //end if 
+					} //end for 
+					for (var z: int = 0; z < vultureTrackerArray.length; z++) {
+						if (pSelectArray[2].currentFrame == 14 && f == vultureTrackerArray[z] && level1ObjectArray[vultureTrackerArray[z]].x <= 575) {
+							level1ObjectArray[vultureTrackerArray[z]].x += vx1;
+						} //end if 
+					} //end for 
+				} //end for 
+				for (var g: int = 0; g < tumbleweedTrackerArray.length; g++) { //if its a tumbleweed, it moves special. this makes it move special. 
+					if (level1ObjectArray[tumbleweedTrackerArray[g]] != null && level1ObjectArray[tumbleweedTrackerArray[g]].x <= 600 && vx1 != 0) {
+						level1ObjectArray[tumbleweedTrackerArray[g]].rotation += -3;
+					} //end if 
+				} //end for
+				for (var gg: int = 0; gg < vultureTrackerArray.length; gg++) //circulates through the vulture tracker array 
+				{
+					if (level1ObjectArray[vultureTrackerArray[gg]] != null && level1ObjectArray[vultureTrackerArray[gg]].x <= 400) {
+						level1ObjectArray[vultureTrackerArray[gg]].x += vx1 / 2 // go 1.5x the speed of a regular object
+						level1ObjectArray[vultureTrackerArray[gg]].y = -.001454714117 * (Math.pow((level1ObjectArray[vultureTrackerArray[gg]].x - 92), 2)) + 213; //controls the parabola the bird follows to swoop down
+						if (vultureSoundPlaying == false) { //is the vulture sound is not playing
+							vultureSoundSoundChannel = vultureSound.play(); //adds a vulture sound once it's on the stage
+							vultureSoundPlaying = true;
+						} //end if
+					} //end if 
+				} //end for	
+				for (var c: int = 0; c < level1ScreenBackgroundArray.length; c++) // a loop to move the background array 
+				{
+					if (pSelectArray[2].currentFrame != 14) {
+						level1ScreenBackgroundArray[c].x += vx1; //move the screen if the player is not crouching
+					} //end if
+					if (level1ScreenBackgroundArray[c].x <= -920) //replaces the background array once it's off the screen
+					{
+						removeChild(level1ScreenBackgroundArray[c]); //remove th screen
+						level1ScreenBackgroundArray[c] = null;
+						level1ScreenBackgroundArray.splice(c, 1);
+						c--;
+						screenBackgroundObj = new ScreenBackground(); //replace the screen
+						screenBackgroundObj.x = level1ScreenBackgroundArray[level1ScreenBackgroundArray.length - 1].x + 550;
+						screenBackgroundObj.y = 200;
+						screenBackgroundObj.alpha = level1ScreenBackgroundArray[level1ScreenBackgroundArray.length - 1].alpha;
+						addChildAt(screenBackgroundObj, 0);
+						level1ScreenBackgroundArray.push(screenBackgroundObj);
+					} //end if
+				} //end for 
+				for (var r: int = 0; r < level1ObjectArray.length; r++) //a for loop to check if the player is hitting the enemy in level one 
+				{
+					if (level1ObjectArray[r] != null && pSelectArray[2] != null && level1ObjectArray[r].hitTestObject(pSelectArray[2])) { //if the player collides with an object
+						if (deathSoundStarted == false) {
+							pSelectArray[2].gotoAndStop(pSelectArray[2].currentFrame); //stop at the current frame
+							if (vultureTrackerArray[0] == 0) {
+								level1ObjectArray[0].gotoAndStop(level1ObjectArray[0].currentFrame); //stop the vulture at current frame
+							} //end if 
+							themeSongSoundChannel.stop(); //stop the music
+							themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+							addThemeSong = true;
+							deathSoundSoundChannel = deathSound.play(); //start the death music
+							deathSoundSoundChannel.addEventListener(Event.SOUND_COMPLETE, doneSound);
+							deathSoundStarted = true;
+							transitionInitiateTimer = new Timer(1000, 1); //set a timer to start the transition
+							transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+							transitionInitiateTimer.start();
+							vx1 = 0; //stop the movement
+							vy1 = 0;
+							jumping = false; //stop the jumping
+							/*if (level1ObjectArray[0] == vultureObj) {
+								vultureObj.gotoAndStop(1);
+							} //end if */
+							stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp); //stop use of keeps
+							stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+						} //end if 
+					} //end if 
+					if (deathSoundComplete == true) //removing everything in level one 
+					{
+						pSelectArray[2].visible = false; //make the character invisible
+						for (var rr: int = 0; rr < level1ObjectArray.length; rr++) {
+							removeChild(level1ObjectArray[r]);
+							level1ObjectArray[r] = null;
+							level1ObjectArray.splice(r, 1);
+						} //end for
+						if (currentFrame == 5) {
+							for (var hhh: int = 0; hhh < level1ObjectArray.length; hhh++) //removing all the enemies in level one 
+							{
+								removeChild(level1ObjectArray[hhh]);
+								level1ObjectArray[hhh] = null;
+								level1ObjectArray.splice(hhh, 1);
+								hhh--;
+							} //end for 
+							for (var v: int = 0; v < tumbleweedTrackerArray.length; v++) //removing the tumbleweed tracker array 
+							{
+								tumbleweedTrackerArray[v] = null;
+								tumbleweedTrackerArray.splice(v, 1);
+								v--;
+							} //end for 
+							for (var ff: int = 0; ff < vultureTrackerArray.length; ff++) //removing the vulture tracker array
+							{
+								vultureTrackerArray[ff] = null;
+								vultureTrackerArray.splice(ff, 1);
+								ff--;
+							} //end for 
+							for (var xx: int = 0; xx < level1ScreenBackgroundArray.length; xx++) //removing the background in level one 
+							{
+								removeChild(level1ScreenBackgroundArray[xx]);
+								level1ScreenBackgroundArray[xx] = null;
+								level1ScreenBackgroundArray.splice(xx, 1);
+								xx--;
+							} //end for 
+							deathSoundSoundChannel.removeEventListener(Event.SOUND_COMPLETE, doneSound); //remove desth sound event listener
+							transitionInitiateTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+							myLevel = 1.7;
+							gotoAndStop(6);
+							scoreTimer.stop();
+							if (addThemeSong) {
+								themeSongSoundChannel = themeSong.play();
+								themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+								addThemeSong = false;
+							} //end if 
+							btnRestart = new Restart(); //make restart button
+							btnRestart.x = 268;
+							btnRestart.y = 330;
+							addChild(btnRestart);
+							btnRestart.addEventListener(MouseEvent.CLICK, restartLevel);
+						} //end if 
+					} //end if 	
+				} //end for 
+				if (transitionInitiate == true) { //if the transiton timer went off
+					pSelectArray[2].alpha -= .02; //slowly fade everything out
+					for (var ggg: int = 0; ggg < level1ObjectArray.length; ggg++) {
+						level1ObjectArray[ggg].alpha -= .02;
+					} //end for 
+					for (var fff: int = 0; fff < level1ScreenBackgroundArray.length; fff++) {
+						level1ScreenBackgroundArray[fff].alpha -= .02;
+					} //end for 
+					if (pSelectArray[2].alpha <= 0) {
+						transitionInitiate = false;
+					} //end if 
+				} //end if
+				//for (var aa:int=0;aa<level1ObjectArray.length;aa++)
+				//{
+				if (level1ObjectArray.length != 0 && level1ObjectArray[0].x < -100) { //get rid of things when they go too far
+					if (vultureTrackerArray[0] == 0) { //if the last character was a vulture, stop the music for the vuture
+						vultureSoundPlaying = false;
+						vultureSoundSoundChannel.stop();
+						vultureTrackerArray.splice(0, 1);
+					} //end if 
+					else if (tumbleweedTrackerArray[0] == 0) {
+						tumbleweedTrackerArray.splice(0, 1);
+					} //else if 
+					removeChild(level1ObjectArray[0]);
+					level1ObjectArray[0] = null;
+					level1ObjectArray.splice(0, 1);
+					for (var u: int = 0; u < vultureTrackerArray.length; u++) {
+						vultureTrackerArray[u] -= 1;
+					} //end for
+					for (var q: int = 0; q < tumbleweedTrackerArray.length; q++) {
+						tumbleweedTrackerArray[q] -= 1;
+					} //end for 
+				} //end if 
+				//}//end for	
+			} //end if level one 
+			else if (myLevel == 1.1) {
+				if (blackScreenObj.alpha <= 0) {
+					myLevel = 1.5;
+					removeChild(blackScreenObj);
+					pSelectArray[2].gotoAndStop(1);
+				} //end if 
+				blackScreenObj.alpha -= .01;
+
+			} //end else if
+			else if (myLevel == 2) {
+				for (var p: int = 0; p < level2BackgroundArray.length; p++) //a for loop that replaces the background when it goes of the stage in level two 
+				{
+					if (currentFrame == 9) { //if on the game screen
+						level2BackgroundArray[p].y += vy2_1; //move the screen
+					} //end if 
+					if (level2BackgroundArray[p] != null && level2BackgroundArray[p].y > 800) { //if the background goes off the screen
+						removeChild(level2BackgroundArray[p]); //delete the screen
+						level2BackgroundArray[p] = null;
+						level2BackgroundArray.splice(p, 1);
+						p--;
+						level2Background = new Level2Background(); //replace the screen
+						level2Background.x = 0;
+						level2Background.y = level2BackgroundArray[level2BackgroundArray.length - 1].y - 400;
+						addChildAt(level2Background, 0);
+						level2BackgroundArray.push(level2Background);
+					} //end if  
+				} //end for 
+				for (var l: int = 0; l < streetDividersArrayLeft.length; l++) {
+					streetDividersArrayLeft[l].y += vy2_1; //move the street dividers
+					streetDividersArrayRight[l].y += vy2_1;
+					if (streetDividersArrayRight[l].y > 550) { //if the street dividers go off the screen
+						removeChild(streetDividersArrayRight[l]); //remove the street dividers (right array has sam indexes and y coordinates as left
+						removeChild(streetDividersArrayLeft[l]);
+						streetDividersArrayRight[l] = null;
+						streetDividersArrayLeft[l] = null;
+						streetDividersArrayRight.splice(l, 1);
+						streetDividersArrayLeft.splice(l, 1);
+						l--;
+						streetDividers = new StreetDividers(); //replace the street divider
+						streetDividers.x = 228.45;
+						streetDividers.y = streetDividersArrayLeft[streetDividersArrayLeft.length - 1].y - 81.45; //place it at the y axis of the topmost thing in th array and then put it 81.45px higher
+						streetDividers.alpha = streetDividersArrayLeft[streetDividersArrayLeft.length - 1].alpha;
+						addChild(streetDividers);
+						streetDividersArrayLeft.push(streetDividers);
+
+						streetDividers = new StreetDividers(); //replace the street divider
+						streetDividers.x = 316.45;
+						streetDividers.y = streetDividersArrayRight[streetDividersArrayRight.length - 1].y - 81.45; //place it at the y axis of the topmost thing in th array and then put it 81.45px higher
+						streetDividers.alpha = streetDividersArrayRight[streetDividersArrayRight.length - 1].alpha;
+						addChild(streetDividers);
+						streetDividersArrayRight.push(streetDividers);
+
+					} //end if 
+					//add code to replace when off screen here
+				} //end for
+				for (var ry: int = 0; ry < level2ObjectArray.length; ry++) //a for loop that checks if the player in level two was hit 
+				{
+					if (level2ObjectArray[ry] != null && level2Player.hitTestObject(level2ObjectArray[ry])) { //if the player hits the object
+						if (deathSoundStarted == false) //if the deathsound hasnt been started
+						{
+							vy2_1 = 0; //stop movement
+							vy2 = 0;
+							themeSongSoundChannel.stop(); //stop the theme song
+							themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+							addThemeSong = true;
+							deathSoundSoundChannel = deathSound.play(); //play the death sound
+							deathSoundStarted = true;
+							transitionInitiateTimer = new Timer(1000, 1); //In 1 second, start the transition
+							transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+							transitionInitiateTimer.start();
+
+							stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //stop giving the player control over the player
+							stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+							eventsRemoved1 = true; //indicates that the events were removed
+						} //end if 
+					} //end if
+
+					if (level2ObjectArray[ry] != null) { //avoids null object reference
+						if (level2ObjectArray[ry].y < 550) { //if the objects are on the screen
+							level2ObjectArray[ry].scaleX = .8; //scale the enemies
+							level2ObjectArray[ry].scaleY = .8;
+							level2ObjectArray[ry].y += vy2; //move the enemies
+						} //end if 
+						else {
+							removeChild(level2ObjectArray[ry]); //if its off the screen, remove them
+							level2ObjectArray[ry] = null;
+							level2ObjectArray.splice(ry, 1);
+							ry--;
+						} //end else 
+					} //end if
+				} //end for 
+				if (transitionInitiate) //if the transition has been initiated
+				{
+					if (level2Player.alpha >= 0) { //fade everything out
+						transitionInitiateTimer.stop(); //stop the timer for transition initiate
+						transitionInitiateTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+						level2Player.alpha -= .01; //fade player
+						//level2Player.y -= 5;
+						for (var nnt: int = 0; nnt < streetDividersArrayLeft.length; nnt++) { //fade the street dividers
+							streetDividersArrayLeft[nnt].alpha -= .01;
+							streetDividersArrayRight[nnt].alpha -= .01;
+						} //end for 
+						for (var hnht: int = 0; hnht < level2ObjectArray.length; hnht++) {
+							level2ObjectArray[hnht].alpha -= .01;
+						} //end for 
+						for (var jjt: int = 0; jjt < level2BackgroundArray.length; jjt++) { // fade out the background
+							level2BackgroundArray[jjt].alpha -= .01;
+						} //end for 
+						street.alpha -= .01; //fade out the street
+					} //end if 
+					else if (level2Player.alpha <= 0) //if the player is fully faded, launch removal
+					{
+						transitionComplete = true;
+					} //end else if 
+				} //end if 
+				if (transitionComplete) //if the transition is done
+				{
+					destroyLevel2(); //launch function to destroy everything
+					if (addThemeSong) //if it is required to add the theme song, add it now
+					{
+						themeSongSoundChannel = themeSong.play();
+						themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+						addThemeSong = false;
+					} //end if 
+					gotoAndStop(6);
+					btnRestart = new Restart(); //add a restart button
+					btnRestart.x = 268;
+					btnRestart.y = 330;
+					addChild(btnRestart);
+					btnRestart.addEventListener(MouseEvent.CLICK, restartLevel);
+					myLevel = 2.5; //my Level is between 2 and 3 since the person lost. 
+				} //end if
+				if (level2ObjectArray.length == 0 && myLevel == 2) { // if you win
+					if (level2Player.alpha >= 0) { //fade everything out until the player is faded fully
+						level2Player.alpha -= .02;
+						level2Player.y -= 5;
+						for (var nn: int = 0; nn < streetDividersArrayLeft.length; nn++) {
+							streetDividersArrayLeft[nn].alpha -= .02;
+							streetDividersArrayRight[nn].alpha -= .02;
+						} //end for 
+						for (var hnh: int = 0; hnh < level2ObjectArray.length; hnh++) {
+							level2ObjectArray[hnh].alpha -= .02;
+						} //end for 
+						for (var jj: int = 0; jj < level2BackgroundArray.length; jj++) {
+							level2BackgroundArray[jj].alpha -= .02;
+						} //end for 
+						street.alpha -= .02;
+					} //end if 
+					else { //if the player is done fading
+						destroyLevel2(); //launch fundtion to destroy
+						gotoAndStop(10);
+						myLevel = 2.7;
+						btnContinue = new Continue(); //add continue button
+						btnContinue.x = 461.5;
+						btnContinue.y = 46.8;
+						addChild(btnContinue);
+						pSelectArray2Placement(); //place the pSelectArray2 in the usual position
+						addChild(pSelectArray[2]);
+						pSelectArray[2].visible = true;
+						blackScreenObj = new BlackScreen(); //adds black screen for fading out 
+						blackScreenObj.x = 0;
+						blackScreenObj.y = 0;
+						blackScreenObj.scaleX = 3;
+						blackScreenObj.scaleY = 3;
+						blackScreenObj.alpha = 1;
+						addChild(blackScreenObj);
+						//carSoundSoundChannel.stop();
+						//carSoundSoundChannel.removeEventListener(Event.SOUND_COMPLETE,restartThemeSong);
+					} //end else 
+				} //end if 
+			} //end else if level two
+			else if (myLevel == 2.7) { //if on you win screen
+				if (blackScreenObj.alpha >= 0) { //fade out the black screen
+					blackScreenObj.alpha -= .02;
+				} //end if 
+				else { //once the black screen is fully faded
+					removeChild(blackScreenObj);
+					blackScreenObj = null;
+					btnContinue.addEventListener(MouseEvent.CLICK, instructionsContinue3);
+					myLevel = 2.75;
+				} //end else 
+			} //end else if my level =2.7
+			else if (myLevel == 3) {
+				if (pSelectArray[3].x + vx4 > 15 && pSelectArray[4].x + vx4 < 300) { //if the player isnt going off the screen
+					pSelectArray[3].x += vx4;
+					pSelectArray[4].x += vx4;
+				} //end if 
+				if (pSelectArray[3].y - vy4 <= 380) { //if the player wont fall too low
+					pSelectArray[3].y -= vy4;
+					pSelectArray[4].y -= vy4;
+				} //end if 
+				if (pSelectArray[3].y <= 250) { //if the player is going too high
+					pSelectArray[3].y += vy4; //undo the movements
+					pSelectArray[4].y += vy4;
+
+					if (vy4 > 0) { //move everything else by vy4
+						for (var jk: int = 0; jk < level3BackgroundArray.length; jk++) //loop to move the level three background array 
+						{
+							level3BackgroundArray[jk].y += vy4;
+						} //end for 
+						for (var hello: int = 0; hello < level3ObjectArray.length; hello++) //for loop to move the enemies 
+						{
+							level3ObjectArray[hello].y += vy4;
+						} //end for 
+						for (var ned: int = 0; ned < warningArray.length; ned++) //loop to move the warning array 
+						{
+							warningArray[ned].y += vy4;
+						} //end for 
+					} //end if 
+				} //end if 
+				for (var pan: int = 0; pan < warningArray.length; pan++) //for loop for the warning array to warn player if boulder is coming 
+				{
+					if (warningArray[pan].y > -50 && warningArray[pan].visible == false) { //if the warning is close to being on screen, make it visible
+						//trace("goodbye");
+						warningArray[pan].visible = true;
+					} //end if 
+					else if (warningArray[pan].y >= 500) { //if the warning goes too far
+						//trace("jhjhj");
+						removeChild(warningArray[pan]);
+						warningArray[pan] = null;
+						warningArray.splice(pan, 1);
+						pan--;
+						if (pan == -1) {
+							pan = 14;
+						} //end if 
+					} //end else if 
+				} //end for 
+				if (vy4 > -10 && holdKey == false && blackScreenObj == null && deathSoundStarted == false) { //if the vy4 is higher than the minimum amount and the player is done holding the key, gradually reduce the vy4
+					vy4 -= 2;
+				} //end if 
+				for (var yo: int = 0; yo < level3BackgroundArray.length; yo++) //for loop to replace the background array once it is off the stage 
+				{
+					if (level3BackgroundArray[yo] != null && level3BackgroundArray[yo].y > 800) {
+						removeChild(level3BackgroundArray[yo]); //remove the background
+						level3BackgroundArray[p] = null;
+						level3BackgroundArray.splice(yo, 1);
+						yo--;
+						level3Background = new Level3Background(); //replace background
+						level3Background.x = 0;
+						level3Background.y = level3BackgroundArray[level3BackgroundArray.length - 1].y - 400;
+						addChildAt(level3Background, 0);
+						level3BackgroundArray.push(level3Background);
+					} //end if 
+				} //end for 
+				for (var rt: int = 0; rt < level3ObjectArray.length; rt++) {
+					for (var hi: int = 0; hi < boulderTrackerArray.length; hi++) {
+						if (boulderTrackerArray[hi] < 0) { //if the boulder tracker indicates an index less than 0, remove that index asthe object i refers too is officially off the screen
+							boulderTrackerArray.splice(hi, 1);
+						} //end if 
+						if (boulderTrackerArray[hi] != rt) { //if rt is not equal to anything in the boulder tracker array, allow it to move normally
+							move = true;
+						} //end if 
+						else if (boulderTrackerArray[hi] == rt) {
+							move = false; //other wise, stop the movement and the array. The boulder will move in special ways
+							hi = 20000;
+						} //end else if 
+					} //end for 
+					if (boulderTrackerArray.length == 0) {
+						move = true; //if there is nothing in the boulder tracker array, allow the objects to move normally
+					} //end if 
+					if (move == true && deathSoundStarted == false) { //if move is true, then move the things in the array
+						if (movementArray[rt] == 1) { //if the movement array is saying to move to the right, move to the right
+							level3ObjectArray[rt].x += 5;
+						} //end if
+						else if (movementArray[rt] == 0) { //if the movement array says to mvoe let, then move left
+							level3ObjectArray[rt].x -= 5;
+						} //end else if
+					} //end if
+					else if (move == false && deathSoundStarted == false) { //if the object is a bouldfer
+						if (level3ObjectArray[rt].y > -50) { //if the objects are on the screen, move it vertically and make it fall at an accelerated rate.
+							level3ObjectArray[rt].y += 8;
+							level3ObjectArray[rt].rotation += 5;
+						} //end if 
+					} //end else if 
+					if (level3ObjectArray[rt].x >= 320) { //if the object goes too far, make it move in the opposit direction
+						movementArray[rt] = 0;
+					} //end if 
+					else if (level3ObjectArray[rt].x <= 20) {
+						movementArray[rt] = 1;
+					} //end else if 
+					if (pSelectArray[4].visible == true && level3ObjectArray[rt].hitTestObject(pSelectArray[4]) || pSelectArray[3].visible == true && level3ObjectArray[rt].hitTestObject(pSelectArray[3])) { //if any object hits any player object
+						//if player gets hit by an enemy, destroy the level 
+						if (deathSoundStarted == false) //start the death sequence
+						{
+							themeSongSoundChannel.stop(); //stop the themesong
+							themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+							addThemeSong = true;
+
+							vx4 = 0; //stop allmovement
+							vy4 = 0;
+
+							stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //take away key control
+							stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+
+							youLose = true; //you lose is now true
+
+							deathSoundSoundChannel = deathSound.play(); //play the death sound
+							deathSoundStarted = true;
+							transitionInitiateTimer = new Timer(1000, 1); //in one second, begin the transition
+							transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+							transitionInitiateTimer.start();
+
+						} //end if 
+						else if (transitionInitiate) //if the timer has completed
+						{
+							if (pSelectArray[3].alpha >= 0 && pSelectArray[4].alpha >= 0) //if the players have not fully faded
+							{
+								for (var day: int = 0; day < level3ObjectArray.length; day++) //fade everything
+								{
+									level3ObjectArray.alpha -= .01;
+								} //end for 
+								pSelectArray[3].alpha -= .01;
+								pSelectArray[4].alpha -= .01;
+							} //end if 
+							else if (pSelectArray[3].alpha <= 0 || pSelectArray[4].alpha <= 0) //if it has faded fully, stop the fading
+							{
+								transitionComplete = true;
+							} //end else if 
+							for (var austin: int = 0; austin < level3ObjectArray.length; austin++) //fade the object array
+							{
+								level3ObjectArray[austin].alpha -= .01;
+							} //end for 
+							for (var sarah: int = 0; sarah < warningArray.length; sarah++) //fade the waring array
+							{
+								warningArray[sarah].alpha -= .01;
+							} //end for 
+							for (var jake: int = 0; jake < level3BackgroundArray.length; jake++) //fade the background array
+							{
+								level3BackgroundArray[jake].alpha -= .01;
+							} //end for 
+						} //end else if 
+						if (transitionComplete) //if the transition is done, launch destroyLevel3()
+						{
+							destroyLevel3();
+						} //end if 
+					} //end if 
+					if (level3ObjectArray.length != 0 && level3ObjectArray[rt].y > 550) { //if the objects go off the screen, remove them. 
+						removeChild(level3ObjectArray[rt]);
+						level3ObjectArray[rt] = null;
+						level3ObjectArray.splice(rt, 1);
+						movementArray.splice(rt, 1);
+						for (var gta: int = 0; gta < boulderTrackerArray.length; gta++) {
+							boulderTrackerArray[gta] = boulderTrackerArray[gta] - 1;
+						} //end for 
+					} //end if
+				} //end for 
+				if (youLose == false && level3ObjectArray.length == 0) { //if you win
+					pSelectArray[3].y -= 15; //move extra fast
+					pSelectArray[4].y -= 15;
+					if (pSelectArray[3].y < 150) { //once the player gets really high up, start the fading
+						if (blackScreenObj == null) { //add the black screen
+							blackScreenObj = new BlackScreen();
+							blackScreenObj.x = 0;
+							blackScreenObj.y = 0;
+							blackScreenObj.scaleX = 3;
+							blackScreenObj.scaleY = 3;
+							blackScreenObj.alpha = 0;
+							addChild(blackScreenObj);
+							stage.removeEventListener(MouseEvent.CLICK, keyDown); //removethe event listeners
+							stage.removeEventListener(MouseEvent.CLICK, keyUp);
+							holdKey = false; //stop the hold key function
+							vy4 = 0; //stop all other movement that isnt coreographed in this function
+						} //end if 
+						else if (blackScreenObj != null && blackScreenObj.alpha < 1) {
+							blackScreenObj.alpha += .02; //fade in the black screen
+						} //end else if 
+						else if (blackScreenObj != null && blackScreenObj.alpha >= 1) { //if the bnlack screen is fully faded in, remove it and move on to the next frame.
+							removeChild(blackScreenObj);
+							blackScreenObj = null;
+							destroyLevel3();
+							pSelectArray2Placement();
+							addChild(pSelectArray[2]);
+							blackScreenObj = new BlackScreen();
+							blackScreenObj.x = 0;
+							blackScreenObj.y = 0;
+							blackScreenObj.scaleX = 3;
+							blackScreenObj.scaleY = 3;
+							addChild(blackScreenObj);
+						} //end else if 
+					} //end if 
+				} //end if 
+			} //end else if level = 3 
+			else if (myLevel == 3.7) { //if on you win screen, fade out the black screen object
+				if (blackScreenObj.alpha > 0) {
+					blackScreenObj.alpha -= .02;
+				} //end if 
+				else { //once fully faded out, remove the obkect and allow for the player to move on.
+					removeChild(blackScreenObj);
+					blackScreenObj = null;
+					btnContinue.addEventListener(MouseEvent.CLICK, instructionsContinue4);
+					myLevel = 3.75;
+				} //end else
+			} //end else if 
+			else if (myLevel == 4) {
+				dial.rotation = dial.rotation % 360; //the dial rotation will pnly be the remainder of 360
+				//trace(dial.rotation);
+				if (markArray.length != 0) { //if the markArray has marks in it
+					for (var teep: int = 0; teep < markArray.length; teep++) {
+						markArray[teep].alpha -= .01; //fade out the marks
+						if (markArray[teep].alpha <= 0) { //if the mark is fully faded out, remove the mark.
+							removeChild(markArray[teep]);
+							markArray[teep] = null;
+							markArray.splice(teep, 1);
+							teep--;
+							if (teep == -1) { //if the counter is less than 0, just make it 45 to stop the loop (as the length of the array will never be 45)
+								teep = 45;
+							} //end if
+						} //end if
+					} //end for
+				} //end if
+				if (lives == 0) { //if you run out of lives
+					if (deathSoundStarted == false) //start the death sound if you have not already done so
+					{
+						deathSoundSoundChannel = deathSound.play(); //death death song
+						themeSongSoundChannel.stop(); //stop theme song
+						themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+						addThemeSong = true;
+
+						//vx4=0;
+						//vy4=0;
+
+						stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //take away key control
+						stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+
+						youLose = true;
+
+						deathSoundStarted = true;
+						transitionInitiateTimer = new Timer(1000, 1);
+						transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+						transitionInitiateTimer.start();
+					} //end if 
+					if (transitionInitiate) //if the transition is supposed to start
+					{
+						dial.alpha -= .01; //fade everything out
+						for (var mam: int = 0; mam < livesArray.length; mam++) {
+							livesArray[mam].alpha -= .01;
+						} //end for
+						safeBackground.alpha -= .01;
+						if (dial.alpha <= 0) //once the dial is fully faded, start the removal
+						{
+							transitionComplete = true;
+						} //end if 
+					} //end if 
+					if (transitionComplete) //if you are supposed to start the removal
+					{
+						if (markArray.length != 0 && eventsRemoved == false) { //if you lose
+							stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //take away key control
+							stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+							eventsRemoved = true;
+						} //end if 
+						else {
+							youWin = false;
+							destroyLevel4();
+						} //end else
+					} //end if 
+
+				} //end if 
+				if (spacebar == 6) { //if you win
+					if (blackScreenObj == null) { //add the black screen if you have not already done so
+						blackScreenObj = new BlackScreen();
+						blackScreenObj.x = 0;
+						blackScreenObj.y = 0;
+						blackScreenObj.scaleX = 3;
+						blackScreenObj.scaleY = 3;
+						blackScreenObj.alpha = 0;
+						addChild(blackScreenObj);
+						stage.removeEventListener(MouseEvent.CLICK, keyDown); //take away key control
+						stage.removeEventListener(MouseEvent.CLICK, keyUp);
+					} //end if 
+					else if (blackScreenObj != null && blackScreenObj.alpha < 1) { //start to fade out the black screen once it has been added
+						blackScreenObj.alpha += .02;
+					} //end else if 
+					else if (blackScreenObj != null && blackScreenObj.alpha >= 1) { //once the black screen is fully faded, remvoe evrythting and move on ot the next level's instructions page.
+						removeChild(blackScreenObj);
+						blackScreenObj = null;
+						youWin = true;
+						themeSongSoundChannel.soundTransform = fullVolume; //make the theme song the full volume again
+						destroyLevel4();
+					} //end else if 
+				} //end if 
+			} //end else if 
+			else if (myLevel == 5) {
+				if (swordLeft.visible == true && swordLeft.currentFrame == 1 || swordRight.visible == true && swordRight.currentFrame == 1) { //if the sword is in its starting position, sword swing is not true
+					swordSwing = false;
+				} //end if 
+				if (holdKeyLevel5 && vy5 == -27) { //if hold key is true and the vy is now at the bare minimum, make hold key false. 
+					holdKeyLevel5 = false;
+				} //end if 
+				if (pSelectArray[2].x + vx5 < 520 && pSelectArray[1].x + vx5 > 30) { //if the player is on screen, allow it to move left and right.
+					pSelectArray[1].x += vx5;
+					pSelectArray[2].x += vx5;
+					swordLeft.x += vx5;
+					swordRight.x += vx5;
+				} //end if 
+				if (pSelectArray[1].x < platform.x - 5 || pSelectArray[1].x > platform.x + platform.width || pSelectArray[1].y + feet < platform.y || pSelectArray[1].y + feet > platform.y + 15 || vy5 >= 0) {
+					//if the player if before the platform after the platform, or the player is above the platform or below the platform, or the player is moving upwards.
+					if (pSelectArray[1].y + feet - vy5 <= 385 || pSelectArray[2].y + feet - vy5 <= 385) {
+						pSelectArray[1].y -= vy5;
+						pSelectArray[2].y -= vy5;
+						swordLeft.y -= vy5;
+						swordRight.y -= vy5;
+					} //end if 
+					else if (pSelectArray[1].y + feet <= 385 && pSelectArray[1].y + feet - vy5 > 385) {
+						pSelectArray[1].y = 385 - feet;
+						pSelectArray[2].y = 385 - feet;
+						swordLeft.y = pSelectArray[1].y;
+						swordRight.y = pSelectArray[2].y;
+						vy5 = -30;
+					} //end else if 
+				} //end if 
+				else if (vy5 <= 0 && pSelectArray[1].y + feet < platform.y && pSelectArray[1].y + feet - vy5 >= platform.y && pSelectArray[1].x >= platform.x - 5 && pSelectArray[1].x <= platform.x + platform.width) {
+					//if the player is standing on the top of the platform
+					pSelectArray[1].y = platform.y - feet;
+					pSelectArray[2].y = platform.y - feet;
+					swordLeft.y = pSelectArray[1].y;
+					swordRight.y = pSelectArray[2].y;
+				} //end else if 
+				if (fireballAmount > 0 && fireballAmount % 1 == 0 && deathSoundStarted == false && youWinStarted == false) { //if the fireball amount is a whole number, you didnt win or lose (game still playing) and the fireball amount is bigger than 0
+					if (bossRight.visible == true) { //if the boss is looking to the right
+						fireballRight = new FireballRight();
+						fireballRight.x = bossRight.x;
+						fireballRight.y = bossRight.y;
+						addChild(fireballRight);
+						rightFireballArray.push(fireballRight);
+					} //end if 
+					else { //if the boss is looking to the left.
+						fireballLeft = new FireballLeft();
+						fireballLeft.x = bossLeft.x;
+						fireballLeft.y = bossLeft.y;
+						addChild(fireballLeft);
+						leftFireballArray.push(fireballLeft);
+					} //end else 
+				} //end if 
+				if (fireballAmount > 0 || fireballAmount <= 5.25) { //move up the fireball amount incrementally so the fireballs arent firing every single frame (that would be very overwhelming)
+					fireballAmount += .2;
+				} //end if 
+				for (var rit: int = 0; rit < rightFireballArray.length; rit++) //for that moves the right fireballs 
+				{
+					if (rightFireballArray[rit].x < 600 && deathSoundStarted != true && youWinStarted == false) {
+						rightFireballArray[rit].x += 5;
+					} //end if 
+					else //remove the fireball if it goes off stage
+					{
+						removeChild(rightFireballArray[rit]);
+						rightFireballArray[rit] = null;
+						rightFireballArray.splice(rit, 1);
+						rit--;
+					} //end else 
+				} //end for 
+
+				for (var rie: int = 0; rie < leftFireballArray.length; rie++) //a loop that moves the left fireball array 
+				{
+					if (leftFireballArray[rie].x > -50 && deathSoundStarted != true && youWinStarted == false) {
+						leftFireballArray[rie].x -= 5;
+					} //end if 
+					else //if it goes off the stage, remove the fireball 
+					{
+						removeChild(leftFireballArray[rie]);
+						leftFireballArray[rie] = null;
+						leftFireballArray.splice(rie, 1);
+						rie--;
+					} //end else
+				} //end for 
+				if ((vx5_1 > 0 && bossLeft.x <= 500) && deathSoundStarted == false && youWinStarted == false || (vx5_1 < 0 && bossRight.x >= 50) && deathSoundStarted == false && youWinStarted == false) { //if you didnt win or lose and the boss will not go off the screen by moving.
+					//trace("helllo");
+					bossLeft.x += vx5_1;
+					bossRight.x += vx5_1;
+				} //end if 
+				if (bossRight.visible == false && vx5_1 > 0) { //If the boss is supposed to move to the right but is currently facing the left
+					bossRight.visible = true;
+					bossLeft.visible = false;
+				} //end if 
+				else if (bossLeft.visible == true && vx5_1 < 0) { //if the boss is supposed to move to the left but is currently facing the right
+					bossLeft.visible = true;
+					bossRight.visible = false;
+				} //end else if 
+
+				if (vy5 <= 30 && vy5 > -30 && deathSoundStarted == false && youWinStarted == false) { //if you didnt win or lose and the player is jumping, mkae graity gradually apply
+					vy5 -= 3
+				} //end if
+				for (var fse: int = 0; fse < leftFireballArray.length; fse++) //a loop to test if the fireball is hitting the player
+				{
+					if (leftFireballArray[fse].hitTestObject(pSelectArray[1]) || leftFireballArray[fse].hitTestObject(pSelectArray[2])) {
+						playerHealth -= .5; //decreases the player's health if they are hit 
+					} //end if 
+				} //end for
+				for (var ghg: int = 0; ghg < rightFireballArray.length; ghg++) //a for loop to test if the fireball is hitting the player
+				{
+					if (rightFireballArray[ghg].hitTestObject(pSelectArray[1]) || rightFireballArray[ghg].hitTestObject(pSelectArray[2])) {
+						playerHealth -= .5; //decreases the player's health if they are hit 
+					} //end if 
+				} //end for 
+				if (swordLeft.hitTestObject(bossLeft) || swordRight.hitTestObject(bossLeft) || swordLeft.hitTestObject(bossRight) || swordRight.hitTestObject(bossRight)) { //if the swords hit the bosses
+					if (swordLeft.currentFrame != 1 || swordRight.currentFrame != 1) {
+						bossHealth -= .0005; //slowly reduce the boss' health
+						trace(bossHealth);
+					} //end if 
+				} //end if 
+				enemyHealthBar.width = bossHealth / 100 * 150; //make the health bar widths directly tied to the number that indicates the health of the player and boss
+				playerHealthBar.width = playerHealth / 100 * 150;
+				if (playerHealth <= 0) { //if the player has no health left, start the death sequence
+					if (deathSoundStarted == false) //if the death sound hasnt started, start it.
+					{
+						deathSoundSoundChannel = deathSound.play(); //play the death sequence
+						themeSongSoundChannel.stop();
+						themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+						addThemeSong = true;
+
+						vy5 = 0; //stop all of the movement
+						vx5_1 = 0;
+
+						stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //take away key controls
+						stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+
+						youLose = true; //you lose is true
+
+						deathSoundStarted = true;
+						transitionInitiateTimer = new Timer(1000, 1); //start the timer that counts down 1 second. When done, launch the transition sequence
+						transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+						transitionInitiateTimer.start();
+
+						//actionsTimer.stop();
+
+						deathSoundStarted = true;
+					} //end if 
+					if (transitionInitiate) //if the transition timer goes off, fade everything out
+					{
+						for (var take: int = 0; take < rightFireballArray.length; take++) //fade everything out
+						{
+							rightFireballArray[take].alpha -= .01;
+						} //end for
+						for (var put: int = 0; put < leftFireballArray.length; put++) {
+							leftFireballArray[put].alpha -= .01;
+						} //end for 
+						bossLeft.alpha -= .01;
+						bossRight.alpha -= .01;
+						pSelectArray[1].alpha -= .01;
+						pSelectArray[2].alpha -= .01;
+						swordLeft.alpha -= .01;
+						swordRight.alpha -= .01;
+						platform.alpha -= .01;
+						largePlatform.alpha -= .01;
+						playerHealthBar.alpha -= .01;
+						enemyHealthBar.alpha -= .01;
+						if (pSelectArray[1].alpha <= 0 || pSelectArray[2].alpha <= 0) //once the layer is fully faded out, launch the removal sequence
+						{
+							transitionComplete = true;
+						} //end if 
+					} //end if 
+					if (transitionComplete) //launch removal sequence
+					{
+						playerAlive = false;
+						bossAlive = true;
+						destroyLevel5();
+					} //end if 
+				} //end if 
+				else if (bossHealth <= 0) { //IF THE BOSS HEALTH IS NOW 0
+					if (youWinStarted == false) //play the you win sound
+					{
+						themeSongSoundChannel.stop();
+						themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+
+						youWinSoundChannel = youWinSound.play();
+						youWinStarted = true;
+
+						transitionInitiateTimer = new Timer(1000, 1);
+						transitionInitiateTimer.addEventListener(TimerEvent.TIMER_COMPLETE, transitionInitiateFunction);
+						transitionInitiateTimer.start();
+					} //end if 
+					else if (transitionInitiate) //if the transition is supposed to initiate , start fading everything
+					{
+						for (var taken: int = 0; taken < rightFireballArray.length; taken++) {
+							rightFireballArray[taken].alpha -= .01;
+						} //end for 
+						for (var putn: int = 0; putn < leftFireballArray.length; putn++) {
+							leftFireballArray[putn].alpha -= .01;
+						} //end for 
+						bossLeft.alpha -= .01;
+						bossRight.alpha -= .01;
+						pSelectArray[1].alpha -= .01;
+						pSelectArray[2].alpha -= .01;
+						swordLeft.alpha -= .01;
+						swordRight.alpha -= .01;
+						platform.alpha -= .01;
+						largePlatform.alpha -= .01;
+						playerHealthBar.alpha -= .01;
+						enemyHealthBar.alpha -= .01;
+
+						actionsTimer.stop(); //stop the actions timer
+						if (pSelectArray[1].alpha <= 0 || pSelectArray[2].alpha <= 0) //if the player is fully faded, launch the removal process
+						{
+							transitionComplete = true;
+						} //end if 
+					} //end else if 
+					if (transitionComplete) //if the trantiion is done, move on.
+					{
+						bossAlive = false;
+						playerAlive = true;
+						destroyLevel5();
+					} //end if 
+				} //end if 
+			} //end if my level is 5
+		} //end gameLoop	
+		public function restartLevel(e: MouseEvent): void {
+			if (myLevel == 1.7) { //if the buttons is pressed, restart the level and go back to level 1
+
+				gotoAndStop(5);
+				scoreTimer.start();
+				if (currentFrame == 5) {
+					pSelectArray[2].visible = true;
+					pSelectArray[2].alpha = 1;
+					pSelectArray[2].gotoAndPlay(2);
+					pSelectArray[2].y = yPlaceHolder;
+					vy1 = 0;
+					btnRestart.removeEventListener(MouseEvent.CLICK, restartLevel);
+					removeChild(btnRestart);
+					btnRestart = null;
+				} //end if 
+				myLevel = 1;
+				level1Start();
+				deathSoundStarted = false;
+				deathSoundComplete = false;
+				jumping = false;
+				stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+				stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+			} //end if 
+			else if (myLevel == 2.5) { //if the button is prssed, go back to level 2
+				gotoAndStop(9);
+				removeChild(btnRestart);
+				btnRestart.removeEventListener(MouseEvent.CLICK, restartLevel);
+				btnRestart = null;
+				startLevel2();
+			} //end else if
+			else if (myLevel == 3.5) { //if my button is pressed, go back to level 3
+				removeChild(btnRestart);
+				btnRestart.removeEventListener(MouseEvent.CLICK, restartLevel);
+				btnRestart = null;
+				gotoAndStop(12);
+				startLevel3();
+			} //end else if 
+			else if (myLevel == 4.5) { //if the button is pressed, go back to level 4
+				removeChild(btnRestart);
+				btnRestart.removeEventListener(MouseEvent.CLICK, restartLevel);
+				btnRestart = null;
+				gotoAndStop(15);
+				startLevel4();
+				myLevel = 4;
+			} //end else if 
+			else if (myLevel == 5.5) { // if the button is pressed, go back to level 5
+				removeChild(btnRestart);
+				btnRestart.removeEventListener(MouseEvent.CLICK, restartLevel);
+				btnRestart = null;
+				gotoAndStop(18);
+				startLevel5();
+				myLevel = 5;
+			} //end else if 
+		} //end restart levels
+		public function selectReeb(e: MouseEvent) //if the character Reeb has been selected
+		{
+			currentPSelect = 0; //the current selected player integer is 0 
+			if (selectionShadowAdded == false) //if the character selection shadow is not visible
+			{
+				selectionShadow = new SelectionShadow(); //add the shadow to the stage under the selected character 
+				selectionShadow.x = 420;
+				selectionShadow.y = 207;
+				selectionShadow.filters = [blur];
+				addChild(selectionShadow);
+				selectionShadowAdded = true; //the shadow is now visible and can't appear twice 
+			} //end if 
+			else {
+				selectionShadow.x = 420;
+			} //end else
+		} //end selectReeb
+		public function selectNinja(e: MouseEvent) //if the character Ninja has been selected
+		{
+			currentPSelect = 1; //the current selected player integer is 1
+			if (selectionShadowAdded == false) //if the shadow is not visible
+			{
+				selectionShadow = new SelectionShadow(); //add the shadow to the stage under the selected character
+				selectionShadow.x = 276;
+				selectionShadow.y = 207;
+				selectionShadow.filters = [blur];
+				addChild(selectionShadow);
+				selectionShadowAdded = true; //the shadow is now visible and can't appear twice 
+			} //end if 
+			else {
+				selectionShadow.x = 276;
+			} //end else
+		} //end selectReeb
+		public function selectRex(e: MouseEvent) // if the character Rex has been selected
+		{
+			currentPSelect = 2; //the churrent selected player integer is 2
+			if (selectionShadowAdded == false) //if the shadow is not visible
+			{
+				selectionShadow = new SelectionShadow(); //add the shadow to the stage under the selected character
+				selectionShadow.x = 137.5;
+				selectionShadow.y = 207;
+				selectionShadow.filters = [blur];
+				addChild(selectionShadow);
+				selectionShadowAdded = true; //the shadow is now visible and can't appear twice
+			} //end if
+			else {
+				selectionShadow.x = 137.5;
+			} //end else
+		} //end selectReeb
+		public function confirmSelection(e: MouseEvent) //once the character selection has been confirmed
+		{
+			if (currentPSelect != 3) {
+				btnReeb.removeEventListener(MouseEvent.CLICK, selectReeb); //remove the buttons to select characters
+				btnNinja.removeEventListener(MouseEvent.CLICK, selectNinja);
+				btnRex.removeEventListener(MouseEvent.CLICK, selectRex);
+				removeChild(btnReeb); //remove the character buttons
+				btnReeb = null;
+				removeChild(btnNinja);
+				btnNinja = null;
+				removeChild(btnRex);
+				btnRex = null;
+				removeChild(btnStart1);
+				if (selectionShadow != null) {
+					removeChild(selectionShadow); //if the shadow is not null, remove that as well
+				} //end if
+				btnStart1.removeEventListener(MouseEvent.CLICK, confirmSelection); //once the character is selected and confirmed, remove the confirm selection button 
+				btnStart1 = null;
+				gotoAndStop(3);
+				if (currentPSelect == 0) { //if the player selects reeb, form the pSelectArray based on the reeb characters
+					reeb = new ReebObj();
+					pSelectArray.push(reeb);
+					sideReebLeft = new ReebSideViewLeft();
+					pSelectArray.push(sideReebLeft);
+					sideReebRight = new ReebSideViewRight();
+					pSelectArray.push(sideReebRight);
+
+					reebJetpackLeft = new ReebJetpackLeft();
+					pSelectArray.push(reebJetpackLeft);
+
+					reebJetpackRight = new ReebJetpackRight();
+					pSelectArray.push(reebJetpackRight);
+					feet = 107;
+				} //end if 
+				else if (currentPSelect == 1) { //if the player selects ninja, form the pSelectArray based on the ninja characters
+					ninja = new NinjaObj();
+					pSelectArray.push(ninja);
+					sideNinjaLeft = new NinjaSideViewLeft();
+					pSelectArray.push(sideNinjaLeft);
+					sideNinjaRight = new NinjaSideViewRight();
+					pSelectArray.push(sideNinjaRight);
+
+					ninjaJetpackLeft = new NinjaJetpackLeft();
+					pSelectArray.push(ninjaJetpackLeft);
+
+					ninjaJetpackRight = new NinjaJetpackRight();
+					pSelectArray.push(ninjaJetpackRight);
+
+					feet = 92;
+
+					/*
+					ninjaSwordLeft=new NinjaSwordLeft();
+					pSelectArray.push(ninjaSwordLeft);
+					
+					ninjaSwordRight=new NinjaSwordRight();
+					pSelectArray.push(ninjaSwordRight);
+					*/
+					/*pSelectArray[2].x=75.4;					pSelectArray[2].y=297.5;					pSelectArray[2].height=180;					pSelectArray[2].width=110;					addChild(pSelectArray[2]);*/
+				} //end else if 
+				else if (currentPSelect == 2) { //if the player selects rex, base the pSelectArray off of the rex objects
+					rex = new RexObj();
+					pSelectArray.push(rex);
+					sideRexLeft = new RexSideViewLeft();
+					pSelectArray.push(sideRexLeft);
+					sideRexRight = new RexSideViewRight();
+					pSelectArray.push(sideRexRight);
+
+					rexJetpackLeft = new RexJetpackLeft();
+					pSelectArray.push(rexJetpackLeft);
+
+					rexJetpackRight = new RexJetpackRight();
+					pSelectArray.push(rexJetpackRight);
+
+					feet = 100;
+					/*pSelectArray[2].x=92.75;					pSelectArray[2].y=303.2;					pSelectArray[2].height=186+(2/3);					pSelectArray[2].width=100;					addChild(pSelectArray[2]);*/
+				} //end else if 
+				pSelectArray2Placement();
+				addChild(pSelectArray[2]);
+				btnContinue = new Continue();
+				btnContinue.x = 461.5;
+				btnContinue.y = 46.8;
+				addChild(btnContinue);
+
+				btnContinue.addEventListener(MouseEvent.CLICK, instructionsContinue);
+			} //end if 
+		} //end confirm selection
+
+		public function pSelectArray2Placement(): void { //PLACE THE CHARACTERS IN THE RIGHT SPOT
+			if (pSelectArray[2] == sideReebRight) {
+				pSelectArray[2].x = 73;
+				pSelectArray[2].y = 275;
+				pSelectArray[2].scaleX = 1;
+				pSelectArray[2].scaleY = 1;
+			} //end if 
+			else if (pSelectArray[2] == sideNinjaRight) {
+				pSelectArray[2].x = 75.4;
+				pSelectArray[2].y = 297.5;
+				pSelectArray[2].height = 180;
+				pSelectArray[2].width = 110;
+			} //end else if 
+			else if (pSelectArray[2] == sideRexRight) {
+				pSelectArray[2].x = 92.75;
+				pSelectArray[2].y = 303.2;
+				pSelectArray[2].height = 186 + (2 / 3);
+				pSelectArray[2].width = 100;
+			} //end else if 
+		} //end public function pselectArray2placement 
+		public function launchPlayerSelect(e: MouseEvent) { //launch the pkayer select screen
+			gotoAndStop(2);
+			removeChild(btnStart);
+			btnStart.removeEventListener(MouseEvent.CLICK, launchPlayerSelect);
+			btnStart = null; //add & position all the characters for selection on the stage
+			btnReeb = new Reeb();
+			btnReeb.x = 344.5;
+			btnReeb.y = 70.05;
+			addChild(btnReeb);
+			btnNinja = new Ninja();
+			btnNinja.x = 215.3;
+			btnNinja.y = 84.05;
+			addChild(btnNinja);
+			btnRex = new Rex1();
+			btnRex.x = 79.5;
+			btnRex.y = 84.05;
+			addChild(btnRex);
+			btnStart1 = new Start1(); //add & position the second start button on the stage
+			btnStart1.x = 128;
+			btnStart1.y = 344;
+			addChild(btnStart1);
+			btnReeb.addEventListener(MouseEvent.CLICK, selectReeb); //add functions to each of the buttons (the characters)
+			btnNinja.addEventListener(MouseEvent.CLICK, selectNinja);
+			btnRex.addEventListener(MouseEvent.CLICK, selectRex);
+			btnStart1.addEventListener(MouseEvent.CLICK, confirmSelection); //add a function to the second start button, meaning the player has selected a character
+		} //end launchPlayerSelect
+		public function instructionsContinue(e: MouseEvent): void { //move on to the next page 
+			if (currentFrame == 3) {
+				gotoAndStop(4);
+			} //end if 
+			else if (currentFrame == 4) {
+				gotoAndStop(5);
+				scoreTimer.start();
+
+				removeChild(btnContinue);
+				btnContinue.removeEventListener(MouseEvent.CLICK, instructionsContinue);
+				if (pSelectArray[2] == sideReebRight) {
+					pSelectArray[2].y += 30;
+					pSelectArray[2].scaleX = .70;
+					pSelectArray[2].scaleY = .70;
+				} //end if 
+				else if (pSelectArray[2] == sideNinjaRight) {
+					pSelectArray[2].y += 15;
+					pSelectArray[2].scaleX = .7;
+					pSelectArray[2].scaleY = .7;
+				} //end else if 
+				else if (pSelectArray[2] == sideRexRight) {
+					pSelectArray[2].scaleX = .6;
+					pSelectArray[2].scaleY = .6;
+					pSelectArray[2].y += 20;
+				} //end else if 
+				pSelectArray[2].gotoAndPlay(2);
+				yPlaceHolder = pSelectArray[2].y;
+
+				level1Start();
+			} //end else if 
+		} //end instructions continue 
+		public function instructionsContinue2(e: MouseEvent): void { //move on to the next instructions screen
+			if (currentFrame == 7) {
+				gotoAndStop(8);
+			} //end if 
+			else if (currentFrame == 8) {
+				gotoAndStop(9);
+				removeChild(pSelectArray[2]);
+				btnContinue.removeEventListener(MouseEvent.CLICK, instructionsContinue2);
+				removeChild(btnContinue);
+				startLevel2();
+			} //end else if 
+		} //end public function instructinos continue 2
+
+		//end instructionsLevel2
+		public function instructionsContinue3(e: MouseEvent): void { //move on to next instructions
+			if (currentFrame == 10) {
+				gotoAndStop(11);
+			} //end if
+			else if (currentFrame == 11) {
+				gotoAndStop(12);
+				btnContinue.removeEventListener(MouseEvent.CLICK, instructionsContinue3);
+				removeChild(btnContinue);
+				removeChild(pSelectArray[2]);
+				startLevel3();
+			} //end else if 
+		} //end public function instructions continue 3
+		public function instructionsContinue4(e: MouseEvent): void { //Move on to next insturctions screen
+			if (currentFrame == 13) {
+				gotoAndStop(14);
+			} //end if 
+			else if (currentFrame == 14) {
+				gotoAndStop(15);
+				removeChild(pSelectArray[2]);
+				btnContinue.removeEventListener(MouseEvent.CLICK, instructionsContinue4);
+				removeChild(btnContinue);
+				startLevel4();
+			} //end else if 
+		} //end function instructions continue 4
+		public function instructionsContinue5(e: MouseEvent): void {
+			if (currentFrame == 16) {
+				removeChild(pSelectArray[2]);
+				removeChild(btnContinue);
+				gotoAndStop(17);
+				pSelectArray2Placement();
+				addChild(pSelectArray[2]);
+				addChild(btnContinue);
+
+			} //end if 
+			else if (currentFrame == 17) {
+				removeChild(pSelectArray[2]);
+				removeChild(btnContinue);
+				btnContinue.removeEventListener(MouseEvent.CLICK, instructionsContinue5);
+				startLevel5();
+			} //end else if 
+		} //end public function instructins continue 5 
+		public function keyDown(e: KeyboardEvent): void { //if the key is pressed
+			if (myLevel == 1) {
+				if (jumping == false) { //if he isnt already jumping
+					if (e.keyCode == Keyboard.DOWN) { //make him crouch
+						if (crouching == false) {
+							pSelectArray[2].gotoAndStop(14);
+							myTimer = new Timer(3000, 1); //if he crouches for too long, uncrouch
+							myTimer.start();
+
+							myTimer.addEventListener(TimerEvent.TIMER_COMPLETE, unCrouch);
+							crouching = true;
+						} //end if 
+					} //end if 
+				} //end if 
+				if (e.keyCode == Keyboard.UP) { //make him jump
+					if (jumping == false) {
+						vy1 = 39;
+						pSelectArray[2].y -= vy1;
+						jumping = true;
+						//vy1-=3;
+						//pSelectArray[2].y-=vy1;
+					} //end if 
+				} //end if 
+			} //end if 
+			if (myLevel == 2) {
+				if (e.keyCode == Keyboard.LEFT) { //move to the left
+					if (level2Player.x > 189) { //if you arent too far to the left
+						level2Player.x -= 88;
+					} //end if 
+				} //end if 
+				if (e.keyCode == Keyboard.RIGHT) { //move to the right
+					if (level2Player.x < 365) { //if you arent too far to the right
+						level2Player.x += 88;
+					} //end if 
+				} //end if 
+			} //end if my level=2
+			if (myLevel == 3) {
+				if (e.keyCode == Keyboard.UP) { //start flying if the key is upward
+					vy4 = 10;
+					holdKey = true;
+					pSelectArray[4].gotoAndStop(1);
+					pSelectArray[3].gotoAndStop(1);
+				} //end if 
+				if (e.keyCode == Keyboard.LEFT) { //move to the left
+					if (pSelectArray[4].visible == true) {
+						pSelectArray[4].visible = false;
+						pSelectArray[3].visible = true;
+					} //end if 
+					vx4 = -10;
+				} //end if 
+				if (e.keyCode == Keyboard.RIGHT) { //move to the right
+					if (pSelectArray[3].visible == true) {
+						pSelectArray[4].visible = true;
+						pSelectArray[3].visible = false;
+					} //end if 
+					vx4 = 10;
+				} //end if 
+			} //end if my level = 3
+			if (myLevel == 4) {
+				if (spacebar % 2 == 1 && e.keyCode == Keyboard.RIGHT) { //move to the right if the tumbler is for ckockwise turning
+					dial.rotation += 9;
+					if (spacebar == 1) {
+						if (dial.rotation == turbine1Rotation) {
+							correctSoundSoundChannel = correctSound.play(); //play correct sound if the thing is at the right ticker
+						} //end if 
+						else if (dial.rotation + 9 == turbine1Rotation || dial.rotation - 9 == turbine1Rotation) {
+							closeSoundSoundChannel = closeSound.play(); //play close sound if the thing is close to the right clicker
+						} //end else if
+						else {
+							wrongSoundSoundChannel = wrongSound.play(); //play ther wrong sound if it isnt even close to the right tickers
+						} //end else
+					} //end if 
+					else if (spacebar == 3) {
+						if (dial.rotation == turbine3Rotation) {
+							correctSoundSoundChannel = correctSound.play();
+						} //end if 
+						else if (dial.rotation + 9 == turbine3Rotation || dial.rotation - 9 == turbine3Rotation) {
+							closeSoundSoundChannel = closeSound.play();
+						} //end else if 
+						else {
+							wrongSoundSoundChannel = wrongSound.play();
+						} //end else
+					} //end else if 
+					else if (spacebar == 5) {
+						if (dial.rotation == turbine5Rotation) {
+							correctSoundSoundChannel = correctSound.play();
+						} //end if 
+						else if (dial.rotation + 9 == turbine5Rotation || dial.rotation - 9 == turbine5Rotation) {
+							closeSoundSoundChannel = closeSound.play();
+						} //end else if 
+						else {
+							wrongSoundSoundChannel = wrongSound.play();
+						} //end else
+					} //end else if 
+				} //end if 
+				else if (spacebar % 2 == 0 && e.keyCode == Keyboard.LEFT) { //move to the left if the turbine dictates counter clockwise rotation
+					dial.rotation += -9;
+					if (spacebar == 2) {
+						if (dial.rotation == turbine2Rotation) {
+							correctSoundSoundChannel = correctSound.play();
+						} //end if 
+						else if (dial.rotation + 9 == turbine2Rotation || dial.rotation - 9 == turbine2Rotation) {
+							closeSoundSoundChannel = closeSound.play();
+						} //end else if 
+						else {
+							wrongSoundSoundChannel = wrongSound.play();
+						} //end else
+					} //end if 
+					else if (spacebar == 4) {
+						if (dial.rotation == turbine4Rotation) {
+							correctSoundSoundChannel = correctSound.play();
+						} //end if 
+						else if (dial.rotation + 9 == turbine4Rotation || dial.rotation - 9 == turbine4Rotation) {
+							closeSoundSoundChannel = closeSound.play();
+						} //end else 
+						else {
+							wrongSoundSoundChannel = wrongSound.play();
+						} //end else
+					} //end else if 
+				} //end else if 
+				else if (e.keyCode == Keyboard.SPACE) { //check if its right
+					if (spacebar == 1) {
+						//spacebar=6;//remove when done testing
+						if (dial.rotation == turbine1Rotation) { //if its right, move on to the next "level"
+							spacebar++;
+							//trace("Yes!");
+							checkmark = new Checkmark();
+							checkmark.x = 275;
+							checkmark.y = 200;
+							addChild(checkmark);
+							markArray.push(checkmark);
+						} //end if 
+						else { //if its wrong just put up an X
+							lives--;
+							//trace("no");
+							wrongmark = new X();
+							wrongmark.x = 275;
+							wrongmark.y = 200;
+							addChild(wrongmark);
+							markArray.push(wrongmark);
+							removeChild(livesArray[lives]);
+							livesArray[lives] = null;
+							livesArray.splice(lives);
+						} //end else 
+					} //end if 
+					else if (spacebar == 2) {
+						if (dial.rotation == turbine2Rotation) {
+							spacebar++;
+							//trace("Yes!");
+							checkmark = new Checkmark();
+							checkmark.x = 275;
+							checkmark.y = 200;
+							addChild(checkmark);
+							markArray.push(checkmark);
+						} //end if 
+						else {
+							lives--;
+							//trace("no");
+							wrongmark = new X();
+							wrongmark.x = 275;
+							wrongmark.y = 200;
+							addChild(wrongmark);
+							markArray.push(wrongmark);
+							removeChild(livesArray[lives]);
+							livesArray[lives] = null;
+							livesArray.splice(lives);
+						} //end else 
+					} //end else if 
+					else if (spacebar == 3) {
+						if (dial.rotation == turbine3Rotation) {
+							spacebar++;
+							//trace("Yes!");
+							checkmark = new Checkmark();
+							checkmark.x = 275;
+							checkmark.y = 200;
+							addChild(checkmark);
+							markArray.push(checkmark);
+						} //end if 
+						else {
+							lives--;
+							//trace("no");
+							wrongmark = new X();
+							wrongmark.x = 275;
+							wrongmark.y = 200;
+							addChild(wrongmark);
+							markArray.push(wrongmark);
+							removeChild(livesArray[lives]);
+							livesArray[lives] = null;
+							livesArray.splice(lives);
+						} //end else 
+					} //end else if 
+					else if (spacebar == 4) {
+						if (dial.rotation == turbine4Rotation) {
+							spacebar++;
+							//trace("Yes!");
+							checkmark = new Checkmark();
+							checkmark.x = 275;
+							checkmark.y = 200;
+							addChild(checkmark);
+							markArray.push(checkmark);
+						} //end if 
+						else {
+							lives--;
+							//trace("no");
+							wrongmark = new X();
+							wrongmark.x = 275;
+							wrongmark.y = 200;
+							addChild(wrongmark);
+							markArray.push(wrongmark);
+							removeChild(livesArray[lives]);
+							livesArray[lives] = null;
+							livesArray.splice(lives);
+						} //end else 
+					} //end else if 
+					else {
+						if (dial.rotation == turbine5Rotation) {
+							spacebar++;
+							//trace("Yes!");
+							checkmark = new Checkmark();
+							checkmark.x = 275;
+							checkmark.y = 200;
+							addChild(checkmark);
+							markArray.push(checkmark);
+						} //end if 
+						else {
+							lives--;
+							//trace("no");
+							wrongmark = new X();
+							wrongmark.x = 275;
+							wrongmark.y = 200;
+							addChild(wrongmark);
+							markArray.push(wrongmark);
+							removeChild(livesArray[lives]);
+							livesArray[lives] = null;
+							livesArray.splice(lives);
+						} //end else 
+					} //end else 
+				} //end else if 
+			} //end if my level = 4 
+			else if (myLevel == 5) {
+				if (e.keyCode == Keyboard.SPACE) { //move sword
+					if (swordSwing == false) { //if the sword isnt already being swung
+						if (swordLeft.visible == true) {
+							swordLeft.gotoAndPlay(2);
+						} //end if 
+						else {
+							swordRight.gotoAndPlay(2);
+						} //end else
+						swordSwing = true;
+					} //end if 
+				} //end if 
+				if (e.keyCode == Keyboard.RIGHT) { //move to the right
+					vx5 = 10;
+					if (pSelectArray[2].visible == false) {
+						pSelectArray[2].visible = true;
+						swordRight.visible = true;
+
+						pSelectArray[1].visible = false;
+						swordLeft.visible = false;
+
+						if (swordLeft.currentFrame != 1) {
+							swordRight.gotoAndPlay(swordLeft.currentFrame);
+						} //end if 
+						else {
+							swordRight.gotoAndStop(swordLeft.currentFrame);
+						} //end else 
+
+					} //end if 
+					if (pSelectArray[2].currentFrame == 1) {
+						pSelectArray[2].gotoAndPlay(2);
+					} //end if 
+				} //end if 
+				else if (e.keyCode == Keyboard.LEFT) { //move to the left
+					vx5 = -10;
+					if (pSelectArray[1].visible == false) {
+						pSelectArray[1].visible = true;
+						swordLeft.visible = true;
+
+						pSelectArray[2].visible = false;
+						swordRight.visible = false;
+
+						if (swordRight.currentFrame != 1) {
+							swordLeft.gotoAndPlay(swordRight.currentFrame);
+						} //end if 
+						else {
+							swordLeft.gotoAndStop(swordRight.currentFrame);
+						} //end else 
+					} //end if 
+					if (pSelectArray[1].currentFrame == 1) {
+						pSelectArray[1].gotoAndPlay(2);
+					} //end if 
+				} //end else if 
+				if (e.keyCode == Keyboard.UP) { //jump
+					if (holdKeyLevel5 == false) {
+						holdKeyLevel5 = true;
+						vy5 = 30;
+					} //end if 
+				} //end if 
+			} //end else if my level==5 
+			else if (myLevel == 6) {
+				/*if (e.keyCode == Keyboard.ENTER) {
+					stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+				} //end if 
+				else {
+					stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+				} //end else */
+			} //end else if my level == 6 
+		} //end KeyDown
+		public function keyUp(e: KeyboardEvent): void {
+			if (myLevel == 1) {
+				if (e.keyCode == Keyboard.DOWN) { //REVERT TO RUNNING 
+					if (pSelectArray[2].currentFrame == 14) {
+						pSelectArray[2].gotoAndPlay(2);
+						myTimer.stop();
+						myTimer.removeEventListener(TimerEvent.TIMER_COMPLETE, unCrouch);
+					} //end if 
+					crouching = false;
+				} //end if 
+			} //end if mylevelone
+			else if (myLevel == 3) {
+				if (e.keyCode == Keyboard.UP) { //Revert to running
+					holdKey = false;
+					pSelectArray[3].gotoAndStop(2);
+					pSelectArray[4].gotoAndStop(2);
+				} //end if 
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.LEFT) { //stop moving
+					vx4 = 0;
+				} //end if 
+			} //end if 
+			else if (myLevel == 5) {
+				if (e.keyCode == Keyboard.RIGHT) { //just stand
+					vx5 = 0;
+					pSelectArray[2].gotoAndStop(1);
+				} //end if 
+				if (e.keyCode == Keyboard.LEFT) { //just stand 
+					vx5 = 0;
+					pSelectArray[1].gotoAndStop(1);
+				} //end if 
+			} //end else if 
+		} //end Key Up
+		public function level1Start(): void {
+			myLevel = 1;
+			for (var t: int = 0; t < 3; t++) //adds enemies to level one 
+			{
+				randomNumberLevel1 = Math.ceil(Math.random() * 4); // rnadomly generates a number. this number will be used to randomly generate the level1ObjectArray
+				vx1 = -10;
+				if (randomNumberLevel1 == 1) {
+					cactusObj = new Cactus();
+					if (t == 0) {
+						cactusObj.x = 850;
+					} //end if 
+					else {
+						cactusObj.x = level1ObjectArray[level1ObjectArray.length - 1].x + Math.ceil(Math.random() * 150) + 400; //find the x of the last thing in the array and then add on 400 and something between 0 and 150
+					} //end else
+					cactusObj.y = 340; //test this, may be too high, may be too low.
+					cactusObj.scaleY = 1.3;
+					addChild(cactusObj);
+					level1ObjectArray.push(cactusObj);
+					//add cactus
+				} //end if 
+				else if (randomNumberLevel1 == 2) {
+					tumbleweedObj = new Tumbleweed();
+					if (t == 0) {
+						tumbleweedObj.x = 850;
+					} //end if 
+					else {
+						tumbleweedObj.x = level1ObjectArray[level1ObjectArray.length - 1].x + Math.ceil(Math.random() * 150) + 400; //find the x of the last thing in the array and then add on 400 and something between 0 and 150
+					} //end else
+					tumbleweedObj.y = 350;
+					addChild(tumbleweedObj);
+					level1ObjectArray.push(tumbleweedObj);
+					tumbleweedTrackerArray.push(t); //will be used for rotation
+					//add tumbleweed
+				} //end else if 
+				else if (randomNumberLevel1 == 3) {
+					vultureObj = new Vulture();
+					if (t == 0) {
+						vultureObj.x = 850;
+					} //end if 
+					else {
+						if (level1ObjectArray[t - 1] != vultureObj) {
+							vultureObj.x = level1ObjectArray[t - 1].x + Math.ceil(Math.random() * 150) + 400; //find the x of the last thing in the array and then add on 400 and something between 0 and 150
+						} //end if 
+						else if (level1ObjectArray[t - 1] == vultureObj) {
+							vultureObj.x = level1ObjectArray[t - 1].x + Math.ceil(Math.random() * 150) + 250;
+						} //end else if 
+					} //end else
+					vultureObj.y = 75; //test and play with it.
+					vultureObj.scaleX = .5;
+					vultureObj.scaleY = .5;
+					addChild(vultureObj);
+					level1ObjectArray.push(vultureObj);
+					vultureTrackerArray.push(t);
+					//add vulture
+				} //end else if 
+				else {
+					snakeObj = new Snake();
+					if (t == 0) {
+						snakeObj.x = 850;
+					} //end if 
+					else {
+						snakeObj.x = level1ObjectArray[level1ObjectArray.length - 1].x + Math.ceil(Math.random() * 150) + 400; //find the x of the last thing in the array and then add on 400 and something between 0 and 150
+					} //end else 
+					snakeObj.y = 350;
+					addChild(snakeObj);
+					level1ObjectArray.push(snakeObj);
+					//add snake
+				} //end else
+			} //end else 
+			//vultureSoundTracker = vultureTrackerArray[0];
+			for (var a: int = 0; a < 5; a++) //moves the background array for level one 
+			{
+				screenBackgroundObj = new ScreenBackground();
+				screenBackgroundObj.x = -370 + 550 * a;
+				screenBackgroundObj.y = 200;
+				addChildAt(screenBackgroundObj, 0);
+				level1ScreenBackgroundArray.push(screenBackgroundObj);
+			} //end for 
+		} //end level1Start
+		public function unCrouch(e: TimerEvent): void { //when the timer goes off, revert the charafter to running
+			pSelectArray[2].gotoAndPlay(2);
+			myTimer.stop();
+		} //end public function uncrouch 
+		public function doneSound(e: Event): void { //when the sound is done, indicate that in the boolean
+			deathSoundComplete = true;
+		} //end public function done sound
+		public function transitionInitiateFunction(e: TimerEvent): void { //once the timer goes off, make the transition move
+			transitionInitiate = true;
+		} //end public function transition initiate function 
+		public function restartThemeSong(e: Event): void //when the song is done, restart it
+		{
+			themeSongSoundChannel = themeSong.play();
+			themeSongSoundChannel.removeEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+			themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+			if (myLevel == 4) {
+				themeSongSoundChannel.soundTransform = quietSound;
+			}
+		}
+		/*public function restartThemeSong(e:Event):void
+		{
+			carSoundSoundChannel=carSound.play();
+		}*/
+		public function startLevel2(): void { //startLevel2
+			//carSoundSoundChannel=carSound.play();
+			//carSoundSoundChannel.addEventListener(Event.SOUND_COMPLETE,restartThemeSong);
+			scoreTimer.start(); //start the score timer
+
+			vy2 = 13; //make the stuff move
+			vy2_1 = 9;
+
+			eventsRemoved1 = false; //reset the booleans
+			deathSoundComplete = false;
+
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp); //add key controls
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+
+			deathSoundStarted = false;
+			transitionInitiate = false;
+			transitionComplete = false;
+
+			level2Player = new LevelTwoPlayer(); //add the player
+			level2Player.x = 277;
+			level2Player.y = 285;
+			addChild(level2Player);
+			//adds the street to the stage
+			street = new Street();
+			street.x = 147.95;
+			street.y = 0;
+			addChildAt(street, 0);
+
+			for (var nn: int = 0; nn < 14; nn++) //moves the left street dividers
+			{
+				streetDividers = new StreetDividers();
+				streetDividers.x = 228.45;
+				streetDividers.y = 308.45 - 81.45 * nn;
+				addChild(streetDividers);
+				streetDividersArrayLeft.push(streetDividers);
+			} //end for 
+			for (var nnn: int = 0; nnn < 14; nnn++) //moves the right street dividers
+			{
+				streetDividers = new StreetDividers();
+				streetDividers.x = 316.45;
+				streetDividers.y = 308.45 - 81.45 * nnn;
+				addChild(streetDividers);
+				streetDividersArrayRight.push(streetDividers);
+			} //end for 
+			for (var n: int = 0; n < 6; n++) //moves the level two background array 
+			{
+				level2Background = new Level2Background;
+				level2Background.x = 0;
+				level2Background.y = 800 - 400 * n;
+				addChildAt(level2Background, 0);
+				level2BackgroundArray.push(level2Background);
+			} //end for 
+			for (var b: int = 0; b < 5; b++) //randomly adds enemies to level two
+			{
+				level2RandomNumber1 = Math.ceil(Math.random() * 5); //determines type of object at start 1 is truck, 2 is blue car, 3 is red car, 4 is green car, 5 is bike
+				level2RandomNumber2 = Math.ceil(Math.random() * 6); //determines combonation of lanes. 1 is left, 2 is middle, 3 is right, 4 is left and right, 5 is middle and right, 6 is left and middle
+				level2RandomNumber3 = Math.ceil(Math.random() * 4); //for other objects to see which object (exclude cyclist) will be next to that car/ truck. thing. 1 is truck, 2 is blue car, 3 is red car, 4 is green car. 
+				if (level2RandomNumber1 == 1) {
+					truck = new Truck();
+					if (level2RandomNumber2 == 1 || level2RandomNumber2 == 4 || level2RandomNumber2 == 6) {
+						truck.x = 189.25; //lane 1
+					} //end if 
+					else if (level2RandomNumber2 == 2 || level2RandomNumber2 == 5) {
+						truck.x = 277.25; //lane 2
+					} //end else if 
+					else if (level2RandomNumber2 == 3) {
+						truck.x = 365.25; //lane 3
+					} //end else if 
+					truck.y = -b * 500;
+					addChild(truck);
+					level2ObjectArray.push(truck);
+				} //end if 
+				else if (level2RandomNumber1 == 2) {
+					bCar = new BlueCar();
+					if (level2RandomNumber2 == 1 || level2RandomNumber2 == 4 || level2RandomNumber2 == 6) {
+						bCar.x = 189.25; //lane 1
+					} //end if 
+					else if (level2RandomNumber2 == 2 || level2RandomNumber2 == 5) {
+						bCar.x = 277.25; //lane 2
+					} //end else if 
+					else if (level2RandomNumber2 == 3) {
+						bCar.x = 365.25; //lane 3
+					} //end else if 
+					bCar.y = -b * 500;
+					addChild(bCar);
+					level2ObjectArray.push(bCar);
+				} //end else if 
+				else if (level2RandomNumber1 == 3) {
+					rCar = new RedCar();
+					if (level2RandomNumber2 == 1 || level2RandomNumber2 == 4 || level2RandomNumber2 == 6) {
+						rCar.x = 189.25; //lane 1
+					} //end if 
+					else if (level2RandomNumber2 == 2 || level2RandomNumber2 == 5) {
+						rCar.x = 277.25; //lane 2
+					} //end else if 
+					else if (level2RandomNumber2 == 3) {
+						rCar.x = 365.25; //lane 3
+					} //end else if 
+					rCar.y = -b * 500;
+					addChild(rCar);
+					level2ObjectArray.push(rCar);
+				} //end else if 
+				else if (level2RandomNumber1 == 4) {
+					gCar = new GreenCar();
+					if (level2RandomNumber2 == 1 || level2RandomNumber2 == 4 || level2RandomNumber2 == 6) {
+						gCar.x = 189.25; //lane 1
+					} //end if 
+					else if (level2RandomNumber2 == 2 || level2RandomNumber2 == 5) {
+						gCar.x = 277.25; //lane 2
+					} //end else if 
+					else if (level2RandomNumber2 == 3) {
+						gCar.x = 365.25; //lane 3
+					} //end else if
+					gCar.y = -b * 500;
+					addChild(gCar);
+					level2ObjectArray.push(gCar);
+				} //end else if 
+				else {
+					cyclist = new Cyclist();
+					if (level2RandomNumber2 == 1 || level2RandomNumber2 == 4 || level2RandomNumber2 == 6) {
+						cyclist.x = 189.25; //lane 1
+					} //end if 
+					else if (level2RandomNumber2 == 2 || level2RandomNumber2 == 5) {
+						cyclist.x = 277.25; //lane 2
+					} //end else if 
+					else if (level2RandomNumber2 == 3) {
+						cyclist.x = 365.25; //lane 3
+					} //end else if 
+					cyclist.y = -b * 500;
+					addChild(cyclist);
+					level2ObjectArray.push(cyclist);
+					if (level2RandomNumber2 > 3) {
+						level2RandomNumber4 = Math.ceil(Math.random() * 2); //for cyclist to determine if cyclist will appear next to him
+					} //end if 
+				} //end else 
+				if (level2RandomNumber1 != 5) {
+					if (level2RandomNumber2 > 3) {
+						if (level2RandomNumber3 == 1) {
+							truck = new Truck();
+							if (level2RandomNumber2 < 6) {
+								truck.x = 365.25; //alne 3
+							} //end if 
+							else {
+								truck.x = 277.25; //lane 2
+							} //end else
+							truck.y = -b * 500;
+							addChild(truck);
+							level2ObjectArray.push(truck);
+						} //end if 
+						else if (level2RandomNumber3 == 2) {
+							bCar = new BlueCar();
+							if (level2RandomNumber2 < 6) {
+								bCar.x = 365.25; //lane 3
+							} //end if 
+							else {
+								bCar.x = 277.25; //lane 2
+							} //end else
+							bCar.y = -b * 500;
+							addChild(bCar);
+							level2ObjectArray.push(bCar);
+						} //end else if 
+						else if (level2RandomNumber3 == 3) {
+							rCar = new RedCar();
+							if (level2RandomNumber2 < 6) {
+								rCar.x = 365.25; //lane 3
+							} //end if 
+							else {
+								rCar.x = 277.25; //lane 2
+							} //end else
+							rCar.y = -b * 500;
+							addChild(rCar);
+							level2ObjectArray.push(rCar);
+						} //end else if 
+						else {
+							gCar = new GreenCar();
+							if (level2RandomNumber2 < 6) {
+								gCar.x = 365.25; //lane 3
+							} //end if 
+							else {
+								gCar.x = 277.25; //lane 2
+							} //end else
+							gCar.y = -b * 500;
+							addChild(gCar);
+							level2ObjectArray.push(gCar);
+						} //end else
+					} //end if 
+				} //end if 
+				else {
+					if (level2RandomNumber2 > 3 && level2RandomNumber4 == 2) {
+						cyclist = new Cyclist();
+						if (level2RandomNumber2 < 6) {
+							cyclist.x = 365.25; //lane 3
+						} //end if 
+						else {
+							cyclist.x = 277.25; //lane 2
+						} //end else
+						cyclist.y = -b * 500;
+						addChild(cyclist);
+						level2ObjectArray.push(cyclist);
+					} //end if 
+				} //end else 
+			} //end for 
+			myLevel = 2;
+			//stage.addEventListener(Event.ENTER_FRAME,startLevel2);
+		} //end startLevelTwo
+		public function startLevel3(): void { //start level 3
+			scoreTimer.start(); //start the score timer
+
+			transitionInitiate = false; //reset booleans
+			deathSoundStarted = false;
+			transitionComplete = false;
+			if (youLose == true) { //reset the movement
+				vy4 = -10;
+				youLose = false;
+			} //end if 
+			else {
+				vy4 = 0;
+			} //end else
+			move = true;
+			//add event listeners 
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+			vy3 = 10;
+
+			vy3_1 = 8;
+
+			vx4 = 0;
+
+			for (var oo: int = 0; oo < 6; oo++) //move the level three background
+			{
+				level3Background = new Level3Background;
+				level3Background.x = 0;
+				level3Background.y = 800 - 400 * oo;
+				addChildAt(level3Background, 0);
+				level3BackgroundArray.push(level3Background);
+			} //end for 
+			if (added == false) { //if this stuff has not been add it, add the player to the stage
+				pSelectArray[4].scaleX = .5;
+				pSelectArray[4].scaleY = .5;
+				pSelectArray[4].x = 250;
+				pSelectArray[4].y = 250;
+				pSelectArray[4].alpha = 1;
+				pSelectArray[4].visible = true;
+				addChild(pSelectArray[4]);
+				pSelectArray[3].scaleX = .5;
+				pSelectArray[3].scaleY = .5;
+				pSelectArray[3].x = 250;
+				pSelectArray[3].y = 250;
+				pSelectArray[3].alpha = 1;
+				addChild(pSelectArray[3]);
+				pSelectArray[3].visible = false;
+				added = true;
+				pSelectArray[3].gotoAndStop(2);
+				pSelectArray[4].gotoAndStop(2);
+			} //end if 
+			else if (added == true) { //if it has been added, reset it to its original alphas and visiblities 
+				pSelectArray[4].visible = true;
+				pSelectArray[4].alpha = 1;
+				pSelectArray[3].visible = false;
+				pSelectArray[3].alpha = 1;
+				pSelectArray[3].gotoAndStop(2);
+				pSelectArray[4].gotoAndStop(2);
+			} //end else 
+			for (var ok: int = 0; ok < 3; ok++) //adds random enemies to level three 
+			{
+				randomNumberLevel3 = Math.ceil(Math.random() * 4); //this number will be randomly generated to randomly create the level 3 array
+				//randomNumberLevel3 = 1;
+				randomX = Math.random() * 150 + 100;
+				//trace(randomX);
+				//vy3=-10;
+				if (randomNumberLevel3 == 1) {
+					boulder = new Boulder();
+					boulder.x = randomX;
+					if (level3ObjectArray.length == 0) {
+						boulder.y = -550;
+					} //end if 
+					else {
+						boulder.y = level3ObjectArray[level3ObjectArray.length - 1].y - 750 - Math.random() * 150;
+					} //end else
+					addChild(boulder);
+					level3ObjectArray.push(boulder);
+
+					warning = new Warning();
+					warning.x = 200;
+					warning.y = level3ObjectArray[level3ObjectArray.length - 1].y + 250;
+					addChild(warning);
+					warning.visible = false;
+					warningArray.push(warning);
+					boulderTrackerArray.push(ok);
+				} //end if 
+				else if (randomNumberLevel3 == 2) { //make a bat
+					bat = new Bat();
+					bat.x = randomX;
+					if (level3ObjectArray.length == 0) {
+						bat.y = -550;
+					} //end if 
+					else {
+						bat.y = level3ObjectArray[level3ObjectArray.length - 1].y - 450 - Math.random() * 150;
+					} //end else 
+					addChild(bat);
+					level3ObjectArray.push(bat);
+				} //end else if 
+				else if (randomNumberLevel3 == 3) { //make a cloud
+					stormCloud = new StormCloud();
+					stormCloud.x = randomX;
+					if (level3ObjectArray.length == 0) {
+						stormCloud.y = -550;
+					} //end if
+					else {
+						stormCloud.y = level3ObjectArray[level3ObjectArray.length - 1].y - 450 - Math.random() * 150;
+					} //end else
+					addChild(stormCloud);
+					level3ObjectArray.push(stormCloud);
+				} //end else if
+				else if (randomNumberLevel3 == 4) { //make a devil
+					devil = new Devil();
+					devil.x = randomX;
+					if (level3ObjectArray.length == 0) {
+						devil.y = -550;
+					} //end if
+					else {
+						devil.y = level3ObjectArray[level3ObjectArray.length - 1].y - 450 - Math.random() * 150;
+					} //end else
+					addChild(devil);
+					level3ObjectArray.push(devil);
+				} //end else if 
+			} //end for 
+			for (var fgfg: int = 0; fgfg < level3ObjectArray.length; fgfg++) { //make the movement array
+				movementArray[fgfg] = 1;
+			} //end for 
+			//trace(movementArray);
+			//trace(level3ObjectArray);
+			//trace(boulderTrackerArray);
+			myLevel = 3;
+		} //end start level 3 
+		public function startLevel4(): void { //start level 4
+			scoreTimer.start();
+			//add event listeners for level 4 
+			transitionInitiate = false;
+			deathSoundStarted = false;
+			transitionComplete = false; //reset the booleans
+
+			themeSongSoundChannel.soundTransform = quietSound;
+
+			safeBackground = new SafeBackground();
+			safeBackground.x = 0;
+			safeBackground.y = 0;
+			safeBackground.alpha = 1;
+			addChild(safeBackground); //make the background
+
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown); //make the key functions
+			myLevel = 4;
+			spacebar = 1;
+			lives = 3;
+
+			dial = new Dial();
+			dial.x = 275;
+			dial.y = 200;
+			dial.alpha = 1;
+			addChild(dial); //amke the dial
+
+			for (var jupe: int = 0; jupe < 3; jupe++) { //make the lives array
+				lives1 = new Lives();
+				lives1.x = 510 - 30 * jupe
+				lives1.y = 375;
+				lives1.alpha = 1;
+				addChild(lives1);
+				livesArray.push(lives1);
+			} //end for 
+
+			level4RandomNumber1 = Math.floor(Math.random() * 39 - .000001) + 1; //random numbers to set which rotation will win the geame
+			level4RandomNumber2 = Math.floor(Math.random() * 39 - .000001) + 1;
+			level4RandomNumber3 = Math.floor(Math.random() * 39 - .000001) + 1;
+			level4RandomNumber4 = Math.floor(Math.random() * 39 - .000001) + 1;
+			level4RandomNumber5 = Math.floor(Math.random() * 39 - .000001) + 1;
+
+			turbine1Rotation = (level4RandomNumber1 * 9); //adjust the rotation thresholds so they actually correlte to a real rotation
+			turbine2Rotation = turbine1Rotation - ((level4RandomNumber2 * 9) % 360);
+			turbine3Rotation = turbine2Rotation + ((level4RandomNumber3 * 9) % 360);
+			turbine4Rotation = turbine3Rotation - ((level4RandomNumber4 * 9) % 360);
+			turbine5Rotation = turbine4Rotation + ((level4RandomNumber5 * 9) % 360);
+			if (turbine1Rotation > 180) { //adjustin the rotations if they are over 180 or under -180
+				turbine1Rotation -= 360
+			} //end if 
+			if (turbine2Rotation > 180) {
+				turbine1Rotation -= 360;
+			} //end if 
+			else if (turbine2Rotation <= -180) {
+				turbine2Rotation += 360;
+			} //end else if 
+			if (turbine3Rotation > 180) {
+				turbine3Rotation -= 360;
+			} //end if 
+			else if (turbine3Rotation <= -180) {
+				turbine3Rotation += 360;
+			} //end else if 
+			if (turbine4Rotation > 180) {
+				turbine4Rotation -= 360;
+			} //end if 
+			else if (turbine4Rotation <= -180) {
+				turbine4Rotation += 360;
+			} //end else if 
+			if (turbine5Rotation > 180) {
+				turbine5Rotation -= 360;
+			} //end if 
+			else if (turbine5Rotation <= -180) {
+				turbine5Rotation += 360;
+			} //end else if 
+			//trace(turbine1Rotation,turbine2Rotation,turbine3Rotation,turbine4Rotation,turbine5Rotation);
+
+		} //end public function start level four 
+		public function startLevel5(): void { //start level5 
+			scoreTimer.start(); //start timer
+
+			transitionInitiate = false;
+			deathSoundStarted = false;
+			transitionComplete = false; //reset the booleans
+
+			gotoAndStop(18);
+
+			myLevel = 5;
+
+			feet = feet / 2; //feetis smaller because the players are smaller
+
+			/*pSelectArray[5].x=100;
+			pSelectArray[5].y=200;
+			addChild(pSelectArray[5]);*/
+			/*
+			pSelectArray[6].x=pSelectArray[5].x;
+			pSelectArray[6].y=pSelectArray[5].y;
+			addChild(pSelectArray[6]);
+			pSelectArray[6].visible=false;
+			*/
+			//adds all the objects to level five 
+
+			level5Background = new Level5Background();
+			level5Background.x = 0;
+			level5Background.y = 0;
+			level5Background.alpha = 1;
+			addChild(level5Background); //MAKE THE BACKGROUND
+
+			swordLeft = new SwordObjLeft();
+			swordLeft.x = 55;
+			swordLeft.y = 385 - feet;
+			swordLeft.alpha = 1;
+			addChild(swordLeft);
+			swordLeft.visible = false; //make the sword
+
+			swordRight = new SwordObjRight();
+			swordRight.x = 120;
+			swordRight.y = 385 - feet;
+			swordRight.alpha = 1;
+			addChild(swordRight); //make the sword
+
+			pSelectArray[2].x = swordRight.x - 45;
+			pSelectArray[2].y = swordRight.y;
+			pSelectArray[2].scaleX = .5;
+			pSelectArray[2].scaleY = .5;
+			pSelectArray[2].alpha = 1;
+			pSelectArray[2].visible = true;
+			addChild(pSelectArray[2]); //make the player
+
+			pSelectArray[1].x = pSelectArray[2].x;
+			pSelectArray[1].y = pSelectArray[2].y;
+			pSelectArray[1].scaleX = pSelectArray[2].scaleX;
+			pSelectArray[1].scaleY = pSelectArray[2].scaleY;
+			pSelectArray[1].alpha = 1;
+			addChild(pSelectArray[1]);
+			pSelectArray[1].visible = false; //make the player
+
+			platform = new Platform();
+			platform.x = 100 + Math.random() * 175;
+			platform.y = 250;
+			platform.alpha = 1;
+			addChild(platform); //make the platform
+
+			largePlatform = new LargePlatform();
+			largePlatform.x = 0;
+			largePlatform.y = 385;
+			largePlatform.alpha = 1;
+			addChild(largePlatform); //make the big platform
+
+			bossRight = new BossRight();
+			bossRight.x = 450;
+			bossRight.y = 385;
+			addChild(bossRight);
+			bossRight.visible = false; //make the boss
+
+			bossLeft = new BossLeft();
+			bossLeft.x = bossRight.x;
+			bossLeft.y = bossRight.y;
+			addChild(bossLeft); //make the boss
+
+			enemyHealthBar = new EnemyHealth();
+			enemyHealthBar.x = 375;
+			enemyHealthBar.y = 20;
+			addChild(enemyHealthBar); //make the enemy health bar
+
+			playerHealthBar = new PlayerHealth();
+			playerHealthBar.x = 25;
+			playerHealthBar.y = 20;
+			addChild(playerHealthBar); //make the player health bar
+
+			bossHealth = 100;
+			playerHealth = 100; //player healtys full
+
+			vx5_1 = -2;
+
+			actionsTimer = new Timer(1000);
+			actionsTimer.start(); //make the actions timer which will control the actions of the boss
+
+			//add event listeners in level five 
+			actionsTimer.addEventListener(TimerEvent.TIMER, newAction);
+			stage.addEventListener(Event.ENTER_FRAME, gameLoop);
+			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUp);
+		} //end level five function
+		public function newAction(e: TimerEvent): void { //make new actions 
+			numberRandom = Math.ceil(Math.random() * 2);
+			fireballAmount = 0;
+			vx5_1 = 0;
+
+			if (numberRandom == 1) { //make there be fireballs
+				fireballAmount = 1;
+			} //end if 
+			else if (numberRandom == 2) { //make the boss visible or not depending on circumstances
+				if (bossLeft.x >= 350) {
+					vx5_1 = -2;
+					if (bossLeft.visible == false) {
+						bossRight.visible = false;
+						bossLeft.visible = true;
+					} //end if 
+				} //end if 
+				else if (bossRight.x <= 100) {
+					vx5_1 = 2;
+					if (bossRight.visible == false) {
+						bossRight.visible = true;
+						bossLeft.visible = false;
+					} //end if 
+				} //end if 
+				else {
+					numberRandom1 = Math.ceil(Math.random() * 2);
+					if (numberRandom1 == 1) {
+						vx5_1 = 2;
+						if (bossRight.visible == false) {
+							bossRight.visible = true;
+							bossRight.visible = false;
+						} //end if 
+
+					} //end if 
+					else {
+						vx5_1 = -2;
+						if (bossLeft.visible == false) {
+							bossLeft.visible = true;
+							bossRight.visible = false;
+						} //end if 
+					} //end else 
+				} //end else 
+			} //end else if 
+		} //end public function new action
+		public function destroyLevel2(): void {
+			scoreTimer.stop(); //stops the score timer
+			//removes the objects in level two 
+
+
+			removeChild(level2Player);
+			level2Player = null;
+
+			removeChild(street);
+			street = null;
+
+			if (level2ObjectArray.length != 0) //if there are no more enemies 
+			{
+				for (var ww: int = 0; ww < level2ObjectArray.length; ww++) //removes the level two enemies 
+				{
+					removeChild(level2ObjectArray[ww]);
+					level2ObjectArray[ww] = null;
+					level2ObjectArray.splice(ww, 1);
+					ww--;
+				} //end for
+			} //end if
+			for (var www: int = 0; www < level2BackgroundArray.length; www++) //removes the moving background array 
+			{
+				removeChild(level2BackgroundArray[www]);
+				level2BackgroundArray[www] = null;
+				level2BackgroundArray.splice(www, 1);
+				www--;
+			} //end for
+			for (var wwww: int = 0; wwww < streetDividersArrayLeft.length; wwww++) //removes the street divider arrays
+			{
+				removeChild(streetDividersArrayLeft[wwww]);
+				removeChild(streetDividersArrayRight[wwww]);
+				streetDividersArrayLeft[wwww] = null;
+				streetDividersArrayRight[wwww] = null;
+				streetDividersArrayLeft.splice(wwww, 1);
+				streetDividersArrayRight.splice(wwww, 1);
+				wwww--;
+			} //end for 
+			if (eventsRemoved1 == false) {
+				stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown); //removes event listeners in level two
+				stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+				eventsRemoved1 = true;
+			} //end if 
+		} //end destroy level two 
+		public function destroyLevel3(): void {
+			scoreTimer.stop();
+
+			pSelectArray[3].visible = false;
+			pSelectArray[4].visible = false;
+
+			for (var ii: int = 0; ii < level3ObjectArray.length; ii++) //removes level 3 enemies
+			{
+				removeChild(level3ObjectArray[ii]);
+				level3ObjectArray[ii] = null;
+				level3ObjectArray.splice(ii, 1);
+				ii--;
+			} //end for 
+			for (var no: int = 0; no < level3BackgroundArray.length; no++) //removes the moving background in level 3
+			{
+				removeChild(level3BackgroundArray[no]);
+				level3BackgroundArray[no] = null;
+				level3BackgroundArray.splice(no, 1);
+				no--;
+			} //end for 
+			for (var fgf: int = 0; fgf < boulderTrackerArray.length; fgf++) //removes the boulder tracker array
+			{
+				boulderTrackerArray.splice(fgf, 1);
+				fgf--;
+			} //for 
+			for (var ttyl: int = 0; ttyl < movementArray.length; ttyl++) //removes the movement array
+			{
+				movementArray.splice(ttyl, 1);
+				ttyl--;
+			} //for
+			for (var hape: int = 0; hape < warningArray.length; hape++) //removes the warning array
+			{
+				removeChild(warningArray[hape]);
+				warningArray[hape] = null;
+				warningArray.splice(hape, 1);
+			} //end for
+			if (youLose == true) //if the player lost, go to the restart frame and restart the level
+			{
+				gotoAndStop(6);
+				if (addThemeSong) {
+					themeSongSoundChannel = themeSong.play();
+					themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+					addThemeSong = false;
+				} //end if 
+				scoreTimer.stop();
+				btnRestart = new Restart();
+				btnRestart.x = 268;
+				btnRestart.y = 330;
+				addChild(btnRestart);
+				btnRestart.addEventListener(MouseEvent.CLICK, restartLevel);
+				myLevel = 3.5;
+			} //end if 
+			else if (youLose == false) //if the player won, move on with the game 
+			{
+				gotoAndStop(13);
+				btnContinue = new Continue();
+				btnContinue.x = 461.5; //location of continue button
+				btnContinue.y = 46.8;
+				addChild(btnContinue);
+				myLevel = 3.7;
+			} //end else if 
+		} //end destroy level 3 
+		public function destroyLevel4(): void { //remove everything
+			scoreTimer.stop();
+
+			if (addThemeSong) {
+				themeSongSoundChannel = themeSong.play();
+				themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+				addThemeSong = false;
+			} //end if 
+
+			removeChild(dial);
+			removeChild(safeBackground);
+			for (var ttt: int = 0; ttt < markArray.length; ttt++) {
+				removeChild(markArray[ttt]);
+				markArray[ttt] = null;
+				markArray.splice(ttt, 1);
+			} //end for
+			for (var gah: int = 0; gah < livesArray.length; gah++) {
+				removeChild(livesArray[gah]);
+				livesArray[gah] = null;
+				livesArray.splice(gah, 1);
+				gah--;
+			} //end for
+			if (youWin == true) {
+				myLevel = 4.7;
+				gotoAndStop(16);
+				btnContinue = new Continue();
+				btnContinue.x = 461.5;
+				btnContinue.y = 46.8;
+				addChild(btnContinue);
+				pSelectArray2Placement();
+				addChild(pSelectArray[2]);
+				pSelectArray[2].visible = true;
+				btnContinue.addEventListener(MouseEvent.CLICK, instructionsContinue5);
+			} //end if 
+			else {
+				myLevel = 4.5;
+				gotoAndStop(6);
+				scoreTimer.stop();
+				btnRestart = new Restart();
+				btnRestart.x = 268;
+				btnRestart.y = 330;
+				addChild(btnRestart);
+				btnRestart.addEventListener(MouseEvent.CLICK, restartLevel);
+			} //end else
+		} //end destroylevel4
+		public function destroyLevel5(): void {
+			scoreTimer.stop();
+
+			pSelectArray[1].visible = false;
+			pSelectArray[2].visible = false;
+
+			if (addThemeSong) {
+				themeSongSoundChannel = themeSong.play();
+				themeSongSoundChannel.addEventListener(Event.SOUND_COMPLETE, restartThemeSong);
+				addThemeSong = false;
+			} //end if 
+
+			feet = feet * 2;
+			//removes all the elements from level 5 
+			removeChild(platform);
+			platform = null;
+
+			removeChild(bossLeft);
+			bossLeft = null;
+			removeChild(bossRight);
+			bossRight = null;
+
+			removeChild(swordLeft);
+			swordLeft = null;
+			removeChild(swordRight);
+			swordRight = null;
+
+			for (var ll: int = 0; ll < leftFireballArray.length; ll++) //removes all the left facing fireballs 
+			{
+				removeChild(leftFireballArray[ll]);
+				leftFireballArray[ll] = null;
+				leftFireballArray.splice(ll, 1);
+				ll--;
+			} //end for 
+			for (var lll: int = 0; lll < rightFireballArray.length; lll++) //removes all the right facing fireballs
+			{
+				removeChild(rightFireballArray[lll]);
+				rightFireballArray[lll] = null;
+				rightFireballArray.splice(lll, 1);
+				lll--;
+			} //end for 
+
+			removeChild(enemyHealthBar);
+			enemyHealthBar = null;
+			removeChild(playerHealthBar);
+			playerHealthBar = null;
+
+			if (playerAlive) {
+				gotoAndStop(19);
+				myLevel = 5.7;
+				trace("youkindawonthegame");
+				startEndScreen();
+			} //end if 
+			else if (bossAlive) {
+				gotoAndStop(6);
+				scoreTimer.stop();
+				myLevel = 5.5;
+				btnRestart = new Restart();
+				btnRestart.x = 268;
+				btnRestart.y = 330;
+				addChild(btnRestart);
+				btnRestart.addEventListener(MouseEvent.CLICK, restartLevel);
+				trace("gameoverLevel5");
+			} //end if
+
+			actionsTimer.stop();
+			//removing all the event listeners in level 5
+			stage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+			stage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
+			stage.removeEventListener(Event.ENTER_FRAME, gameLoop);
+			actionsTimer.removeEventListener(TimerEvent.TIMER, newAction);
+
+
+		} //end function destroy level 5 
+		public function startEndScreen(): void {
+			scoreTimer.stop(); //stop the timer
+			//trace(scoreTimer.currentCount);
+			highScore = scoreTimer.currentCount //score in seconds
+
+			endScreenTextFormat = new TextFormat();
+			endScreenTextFormat.font = "8-bit pusab";
+			endScreenTextFormat.align = "center";
+			endScreenTextFormat.size = 18; //ake text boxed that show the text
+
+			endScreenTextFormat1 = new TextFormat();
+			endScreenTextFormat1.font = "8-bit pusab";
+			endScreenTextFormat1.align = "center";
+			endScreenTextFormat1.size = 8;
+
+			pSelectArray[0].x = 45;
+			pSelectArray[0].y = 395 - pSelectArray[0].height / 2;
+			pSelectArray[0].visible = true;
+			addChild(pSelectArray[0]);
+
+			gem = new Gem();
+			gem.x = pSelectArray[0].x;
+			gem.y = pSelectArray[0].y;
+			gem.scaleX = ((pSelectArray[0].width - 10) / gem.width) / 2;
+			gem.scaleY = gem.scaleX;
+			gem.alpha = .5;
+			addChild(gem);
+
+			nameText = new TextField();
+			nameText.type = "input";
+			nameText.x = 175;
+			nameText.y = 190;
+			nameText.width = 200;
+			nameText.height = 50;
+			nameText.background = true;
+			nameText.defaultTextFormat = endScreenTextFormat;
+			addChild(nameText);
+			nameText.addEventListener(TextEvent.TEXT_INPUT, captureTextInput);
+
+			if (previousScore) {
+				previousScoreTextField = new TextField();
+				previousScoreTextField.x = 25;
+				previousScoreTextField.y = 125;
+				previousScoreTextField.width = 500;
+				previousScoreTextField.height = 60;
+				previousScoreTextField.defaultTextFormat = endScreenTextFormat1;
+				previousScoreTextField.text = "Previous Score: " + previousScore.score.toString() + " seconds by: " + previousScore.name + " (" + previousScore.date + ").";
+				addChild(previousScoreTextField);
+			} //end if 
+			if (previousScore) {
+				if (previousScore.score < highScore) {
+					highScoreTextField = new TextField();
+					highScoreTextField.x = 25;
+					highScoreTextField.y = 250;
+					highScoreTextField.width = 500;
+					highScoreTextField.height = 100;
+					highScoreTextField.defaultTextFormat = endScreenTextFormat1;
+					highScoreTextField.text = "New High Score! " + highScore.toString() + " seconds";
+					addChild(highScoreTextField);
+				} //end if 
+				else {
+					highScoreTextField = new TextField();
+					highScoreTextField.x = 25;
+					highScoreTextField.y = 250;
+					highScoreTextField.width = 500;
+					highScoreTextField.height = 100;
+					highScoreTextField.defaultTextFormat = endScreenTextFormat1;
+					highScoreTextField.text = "Score: " + highScore.toString() + " seconds";
+					addChild(highScoreTextField);
+				} //end else 
+			} //end if 
+			else {
+				highScoreTextField = new TextField();
+				highScoreTextField.x = 25;
+				highScoreTextField.y = 250;
+				highScoreTextField.width = 500;
+				highScoreTextField.height = 100;
+				highScoreTextField.defaultTextFormat = endScreenTextFormat1;
+				highScoreTextField.text = "Score: " + highScore.toString() + " seconds";
+				addChild(highScoreTextField);
+			} //end else
+
+			btnSave = new Save();
+			btnSave.x = 160;
+			btnSave.y = 350;
+			addChild(btnSave);
+
+			btnSkip = new Skip();
+			btnSkip.x = 360;
+			btnSkip.y = 350;
+			addChild(btnSkip);
+
+			btnSave.addEventListener(MouseEvent.CLICK, save);
+			btnSkip.addEventListener(MouseEvent.CLICK, skip);
+
+			myLevel = 6;
+			stage.focus = nameText;
+			//stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown);
+		} //end public function end test screen 
+		public function captureTextInput(e: TextEvent): void {
+			name1 = nameText.text;
+		} //end public function capture text input 
+		public function save(e: MouseEvent): void {
+			name1 = nameText.text;
+			//name = nameText.text;
+			removeChild(nameText);
+			nameText = null;
+			if (previousScoreTextField != null) {
+				removeChild(previousScoreTextField);
+				previousScoreTextField = null;
+			} //end if 
+			removeChild(highScoreTextField);
+			highScoreTextField = null;
+			//nameText.removeEventListener(TextEvent.TEXT_INPUT,captureTextInput);
+			savedHighScore.data.savedScore = highScore; //.score = score
+			savedHighScore.data.name = name1; //make .name=name
+			savedHighScore.data.date = dateStr; //make .date property the date
+			savedHighScore.flush(10000); //save to disk
+			savedHighScore.close(); //close fire
+
+			removeChild(btnSkip);
+			btnSkip.removeEventListener(MouseEvent.CLICK, skip);
+			btnSkip = null;
+
+			removeChild(btnSave);
+			btnSave.removeEventListener(MouseEvent.CLICK, save);
+			btnSave = null;
+
+			myLevel = 2000;
+			gotoAndStop(20);
+		} //end public function save
+		public function skip(e: MouseEvent): void { //dont save just skip
+			removeChild(nameText);
+			if (previousScoreTextField != null) {
+				removeChild(previousScoreTextField);
+			} //end if 
+			removeChild(highScoreTextField);
+			myLevel = 2000;
+			removeChild(btnSkip);
+			btnSkip.removeEventListener(MouseEvent.CLICK, skip);
+			btnSkip = null;
+
+			removeChild(btnSave);
+			btnSave.removeEventListener(MouseEvent.CLICK, save);
+			btnSave = null;
+			gotoAndStop(20);
+			savedHighScore.close();
+		} //end public function skip 
+	} //end public class
+} //end program
